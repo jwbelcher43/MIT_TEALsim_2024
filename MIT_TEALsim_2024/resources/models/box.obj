@@ -1,0 +1,59 @@
+# Max2Obj Version 4.0 Mar 10th, 2001
+#
+mtllib ./maps/box.mtl
+g
+# object Box01 to come ...
+# vertex 1  max coordinates are (-100,200,-50)
+v  -100 -50 -200
+# vertex 2  max coordinates are (100,200,-50)
+v  100 -50 -200
+# vertex 3  max coordinates are (-100,200,50)
+v  -100 50 -200
+# vertex 4  max coordinates are (100,200,50)
+v  100 50 -200
+# vertex 5  max coordinates are (-100,-200,-50)
+v  -100 -50 200
+# vertex 6  max coordinates are (100,-200,-50)
+v  100 -50 200
+# vertex 7  max coordinates are (-100,-200,50)
+v  -100 50 200
+# vertex 8  max coordinates are (100,-200,50)
+v  100 50 200
+# 8 vertices
+
+vt  0 0 0
+vt  1 0 0
+vt  0 1 0
+vt  1 1 0
+vt  0 0 0
+vt  1 0 0
+vt  0 1 0
+vt  1 1 0
+vt  0 0 0
+vt  1 0 0
+vt  0 1 0
+vt  1 1 0
+# 12 texture vertices
+
+g Box01
+usemtl Metal_Tinfoil
+s 2
+f -5/-2 -8/-3 -6/-1 
+f -5/-2 -7/-4 -8/-3
+s 4
+f -4/-4 -3/-3 -1/-1
+f -1/-1 -2/-2 -4/-4
+s 8
+f -8/-8 -7/-7 -3/-5
+f -3/-5 -4/-6 -8/-8
+s 16
+f -7/-12 -5/-11 -1/-9
+f -1/-9 -3/-10 -7/-12
+s 32
+f -5/-8 -6/-7 -2/-5
+f -2/-5 -1/-6 -5/-8
+s 64
+f -6/-12 -8/-11 -4/-9
+f -4/-9 -2/-10 -6/-12
+# 12 faces
+

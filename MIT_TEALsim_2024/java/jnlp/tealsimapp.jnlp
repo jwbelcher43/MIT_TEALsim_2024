@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for TEALsim fcr -->
+<jnlp spec="1.0+" codebase="@WebURL@" href="tealsimapp.jnlp">
+  <information>
+    <title>TEALsim Player</title>
+    <vendor>TEAL/Studio Physics Project</vendor>
+    <homepage href="index.html"/>
+    <description>TEALsim - a simulation framework</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.4+" initial-heap-size="64m" max-heap-size="512m"/>
+    <jar href="lib/TEALsim-simulations.jar" download="eager"/>
+    <jar href="lib/TEALsim-core.jar" download="eager"/>
+	<extension name="Java3D" href="java3d/java3d.jnlp"/>
+  </resources> 
+  <application-desc main-class="tealsim.TealSimApp">
+  <argument>-a</argument>
+  <argument>-c</argument>
+  </application-desc>
+</jnlp>

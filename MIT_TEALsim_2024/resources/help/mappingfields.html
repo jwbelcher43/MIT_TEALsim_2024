@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<link rel=Edit-Time-Data href="mappingfields_files/editdata.mso">
+<link rel=OLE-Object-Data href="mappingfields_files/oledata.mso">
+<title>Purpose: The Mapping Fields applet helps to visualize the structure of 
+two dimension vector fields using the “grass seeds” or</title>
+<style><!--
+.MsoEndnoteText
+	{line-height:200%;
+	font-size:12.0pt;
+	font-family:Times;}
+.SpellE
+	{}
+.GramE
+	{}
+.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+<body bgcolor="#FFFFFF" class="Normal" lang=EN-US>
+<div class=Section1> 
+  <p><b>Mapping Fields</b></p>
+  <p><b>Purpose:</b>  The Mapping Fields applet helps to visualize the structure 
+    of two dimensional vector fields using the line integral convolution (LIC)
+    representation [1].  By “two dimensional vector field” we mean a vector field 
+    that is given by </p>
+  <p><sub> <img width=179 height=25
+src="mappingfields_files/image002.gif" v:shapes="_x0000_i1025"> </sub>                            
+                                                    (1)</p>
+  <p>In the LIC representation, <span
+style='"MS Mincho"'>the direction of the field at any point is indicated by the 
+    orientation of the correlations in texture near that point.  A LIC does not give you
+    the absolute direction of the field, but only the
+    direction parallel to the field or anti-parallel to the field. </span> </p>
+    
+  <p><b>Usage:</b>  To use the applet, enter the <i>x</i> and <i>y</i> components 
+    of your field (that is, <i>g(<span class=SpellE>x<span class=GramE>,y</span></span>)</i> 
+    and <i>h(<span class=SpellE>x,y</span>)</i>) in the boxes provided, and hit 
+    the top button in the <i>Generate Field Visualization</i> field.  After a few seconds the screen will display the LIC 
+    representation of your function. A blue rectangular box shows you the region 
+    within which the field is represented. The center of that box is at the center 
+    of coordinates (<i>x = 0</i> and <i>y = 0</i>), and the scale is set to <i>8</i>, 
+    meaning that the range is <i>–8 &lt; x &lt; 8</i> (horizontal) and <i>–8 &lt; 
+    y &lt; 8</i> (vertical). </p>
+  <p>If you hit the bottom button in the <i>Generate Field Visualization</i> field instead, the applet will display the vector field that is everywhere 
+    perpendicular to <sub> <img width=49 height=25
+src="mappingfields_files/image004.gif" v:shapes="_x0000_i1026"> </sub> , i.e. 
+    it will display the field </p>
+  <p>            <sub> <img width=191 height=25
+src="mappingfields_files/image006.gif" v:shapes="_x0000_i1027"> </sub>                                     
+                            (2)</p>
+  <p>If  <sub> <img width=49 height=25
+src="mappingfields_files/image004.gif" v:shapes="_x0000_i1028"> </sub>  is an 
+    electrostatic vector field, this would define the <span class=SpellE>equipotentials</span> 
+    of that problem.  To get you started in exploring various functions, we give 
+    some examples, which can be selected using the “Example” pull down box (left 
+    click and scroll to select) and the "Contest Winners" pull down box.  This refers to a "Weird Fields"
+    contest run in 8.02 in various years, and the names in this box refer to the student winners.</p>
+  <p><b>Functions</b>:   Use “ ^ ” for power, “ * ” for multiplication, “ / ” for division, 
+    “ + ” and “ – ” for addition and subtraction. You are also provided with a set 
+    of elementary functions, such as square root (<span
+class=SpellE><i>sqrt</i></span>), trigonometric (<i>sin</i>, <span
+class=SpellE><i>cos</i></span> and <i>tan</i>), inverse trigonometric (<span
+class=SpellE><i>asin</i></span>, <span class=SpellE><i>acos</i></span> and <span
+class=SpellE><i>atan</i></span>), hyperbolic (<span class=SpellE><i>sinh</i></span>, 
+    <span class=SpellE><i>cosh</i></span> and <span class=SpellE><i>tanh</i></span>), 
+    exponential (<i>exp</i>) and logarithmic (natural: <span class=SpellE><span
+class=GramE><i>ln</i></span></span><span class=GramE>,</span> and base 10: <i>log</i>).</p>
+  <p><b>Polar coordinates</b>: If you enter “<i> r </i>”, the program will interpret 
+    that letter as “<span class=SpellE><i>sqrt</i></span><i>(x^2+y^2)”</i>, so 
+    that entering e.g. the field of a dipole is easier. If you enter “<i> t </i>”, 
+    the program will interpret it as the counter-clockwise angle <i>&#952;</i> 
+    from the <i>x</i>-axis, equivalent to “<span class=SpellE><i>atan2</i></span><i>(x,y)</i>”, 
+    and will yield a value between –<i>&#960;</i> and <i>&#960;</i></p>
+ 
+  <h1>References</h1>
+  <p class=MsoEndnoteText style='line-height:normal'><span class=GramE>[1] <span
+style='font-family:"Times New Roman"'>B. Cabral and C. <span class=SpellE>Leedom</span>, 
+    “Imaging Vector Fields Using Line Integral Convolution” Proc. SIGGRAPH ’93, 
+    pp. 263-270, 1993.</span></span></p>
+</div>
+</body>
+</html>

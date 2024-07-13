@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!-- JNLP File for TEAL Simulation Application --> 
+<jnlp spec="1.0+" codebase="@WebURL@" href="gausslaw.jnlp"> 
+  <information> 
+    <title>Gauss Law Simulation</title> 
+    <vendor>TEAL Studio Physics</vendor> 
+    <homepage href="docs/help.html"/> 
+    <description>Gauss Law Simulation</description> 
+    <description kind="short">Gauss Law Simulation</description> 
+    <offline-allowed/> 
+  </information> 
+  <security> 
+      <all-permissions/> 
+  </security> 
+  <resources>
+    <j2se version="1.4+" initial-heap-size="64m" max-heap-size="512m"/>
+	<jar href="lib/Gausslaw.jar" download="eager"/>
+ 	<jar href="lib/TEALsim-core.jar" download="eager"/>
+	<extension name="Java3D" href="java3d/java3d.jnlp"/>
+  </resources> 
+  <application-desc main-class="gausslaw.GaussLawApp"/>
+</jnlp> 
+

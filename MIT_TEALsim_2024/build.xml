@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TEALsim" default="distribution">
+
+	<property file="build.properties" />
+	<property name="project" value="TEALsim" />
+	<property name="project.fullname" value="TEALsim" />
+	<property name="version" value="v0.4" />
+
+	<property name="j3djar.dir" value="${basedir}/java/lib/j3d/1.4.0_01" />
+
+	<property name="release.dir" value="release" />
+	<property name="build.dir" value="${release.dir}/${project}-${version}" />
+	<property name="javadoc.dir" value="${build.dir}/doc/api" />
+
+	<property name="publish.project.home" value="www" />
+	<property name="publish.web.url" value="http://web.mit.edu/viz/EM/simulations" />
+	<property name="publish.download.dir" value="lib" />
+	<property name="publish.local.dir" value="../TEALsim_jars" />
+	<property name="project.classes" value="bin" />
+	<property name="project.release" value="release" />
+
+	<taskdef name="jreleaseinfo" classname="ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask">
+		<classpath>
+			<pathelement location="${basedir}/java/lib/jreleaseinfo-1.2.0.jar" />
+		</classpath>
+	</taskdef>
+
+	<fileset id="license" dir="${basedir}">
+		<include name="LICENSE.txt" />
+		<include name="README.txt" />
+		<include name="NOTICE.txt" />
+	</fileset>
+	<fileset id="src_core" dir="${basedir}/java/src">
+		<exclude name="**/CVS" />
+		<exclude name="teal/physics/*Particle*.java" />
+		<exclude name="teal/physics/em/Circuit.java" />
+		<exclude name="teal/physics/em/*Particle*.java" />
+		<exclude name="teal/plot/CircuitPotentialPlot.java" />
+		<exclude name="teal/visualization/processing/ColorCoding.java" />
+		<exclude name="teal/visualization/processing/Quantize.java" />
+		
+		<include name="teal/**/*.*" />
+	</fileset>
+	
+	<fileset id="src_sims" dir="${basedir}/java/src">
+		<exclude name="CVS/*.*" />
+		<include name="tealsim/TealSimApp.java" />
+		<include name="tealsim/Java3DSImport.java" />
+		<exclude name="tealsim/physics/em/Capacitor2.java" />
+		<exclude name="tealsim/physics/em/PotentialSolverRelaxation.java" />
+		<include name="tealsim/physics/em/*.*" />
+		<include name="tealsim/physics/mech/*.*" />
+		<include name="tealsim/physics/examples/*.*" />
+	</fileset>
+	<fileset id="src_isocket" dir="${basedir}/java/src">
+		<exclude name="CVS/*.*" />
+		<exclude name="isocket/Test*.*" />
+		<include name="isocket/*.*" />
+	</fileset>
+	<fileset id="src_ilab" dir="${basedir}/java/src">
+		<exclude name="CVS/*.*" />
+		<include name="tealsim/physics/em/TeachSpinBa*.*" />
+		<include name="tealsim/physics/ilab/*.*" />
+	</fileset>
+	<fileset id="images_core" dir="${basedir}/resources">
+		<include name="icons/**/*.png" />
+	</fileset>
+	<fileset id="resources" dir="resources">
+		<exclude name="CVS/*.*" />
+		<include name="help/**/*.*" />
+		<include name="models/**/*.*" />
+		<include name="icons/**/*.*" />
+	</fileset>
+	<fileset id="classes_core" dir="${build.dir}/classes">
+		<exclude name="CVS/*.*" />
+		<include name="teal/**" />
+	</fileset>
+
+	<fileset id="classes_tealsim" dir="${build.dir}/classes">
+		<exclude name="CVS/*.*" />
+		<include name="tealsim/TealSimApp.class" />
+		<include name="tealsim/Java3DSImport.class" />
+		<include name="tealsim/physics/em/**" />
+		<include name="tealsim/physics/mech/**" />
+		<include name="tealsim/physics/examples/**" />
+	</fileset>
+	<fileset id="classes_isocket" dir="${build.dir}/classes">
+		<exclude name="CVS/*.*" />
+		<include name="isocket/**" />
+	</fileset>
+	<fileset id="classes_ilab" dir="${build.dir}/classes">
+		<exclude name="CVS/*.*" />
+		<include name="tealsim/physics/ilab/**" />
+	</fileset>
+
+	
+		
+	<fileset id="jnlp_em" dir="${basedir}/java/jnlp">
+		<include name="boxinduction.jnlp" />
+		<include name="capacitor.jnlp" />
+		<include name="chargebyinduction.jnlp" />
+		<include name="chargedmetalslab.jnlp" />
+		<include name="chargeinmagneticfield.jnlp" />
+		<include name="coulombslaw.jnlp" />
+		<include name="esforce.jnlp" />
+		<include name="emradiator.jnlp" />
+		<include name="videogame.jnlp" />
+		<include name="zoo.jnlp" />
+		<include name="exbdrift.jnlp" />
+		<include name="fallingcoil.jnlp" />
+		<include name="fallingmagnet.jnlp" />
+		<include name="faradayslaw.jnlp" />
+		<include name="faradayslawrotation.jnlp" />
+		<include name="faradayslaw02.jnlp" />
+		<include name="floatingcoil.jnlp" />
+		<include name="mappingfields.jnlp" />
+		<include name="pcharges.jnlp" />
+		<include name="pentagon.jnlp" />
+		<include name="radiationcharge.jnlp" />
+		<include name="teachspin.jnlp" />
+		<include name="tealsimapp.jnlp" />
+		<include name="torqueondipb.jnlp" />
+		<include name="torqueondipe.jnlp" />
+		<include name="vandegraff.jnlp" />
+		<include name="wireandmagnet.jnlp" />
+		<include name="exploringpotential.jnlp" />
+	</fileset>
+
+	<fileset dir="${basedir}/java/jnlp" id="jnlp_examples">
+		<include name="*.jnlp" />
+	</fileset>
+
+	<fileset dir="${basedir}/java/jnlp" id="jnlp_mech">
+		<include name="celestial.jnlp" />
+		<include name="circularmotion.jnlp" />
+		<include name="galileosinclinedplane.jnlp" />
+		<include name="inclinedplane.jnlp" />
+		<include name="newtonscradle.jnlp" />
+		<include name="pendulum.jnlp" />
+		<include name="planets.jnlp" />
+		<include name="projectile.jnlp" />
+		<include name="rigidbar.jnlp" />
+		<include name="simplependulum.jnlp" />
+		<include name="simplependulumimpulse.jnlp" />
+		<include name="weightedpendulum.jnlp" />
+	</fileset>
+
+	<fileset dir="${basedir}/java/jnlp" id="jnlp_misc">
+		<include name="planetwaveapp.jnlp" />
+		<include name="seafloor.jnlp" />
+	</fileset>
+
+	<fileset dir="java/jnlp" id="jnlp_ilab">
+		<include name="ForceOnDipoleLV.jnlp" />
+	</fileset>
+
+	<!-- TARGETS -->
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${release.dir}" />
+	</target>
+
+	<target name="init">
+		<tstamp>
+			<format property="build.time" pattern="MM/dd/yyyy hh:mm aa" locale="en" />
+			<format property="build.version" pattern="yyyyMMdd" locale="en" />
+		</tstamp>
+
+		<filter token="VERSION" value="${version}" />
+		<filter token="PROJECT.FULLNAME" value="${project.fullname}" />
+		<filter token="PROJECT.SHORTNAME" value="${project}" />
+		<filter token="YEAR" value="${year}" />
+
+		<mkdir dir="${release.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/src" />
+		<mkdir dir="${build.dir}/classes" />
+
+		<!-- <mkdir dir="${project.release}" /> -->
+
+		<jreleaseinfo targetDir="${build.dir}/java/src/" packagename="teal" classname="Version" project="${project}" version="${version}">
+			<parameter name="Year" value="${year}" />
+			<parameter name="BuildTimestamp" value="${build.time}" />
+		</jreleaseinfo>
+
+	</target>
+
+	<!--
+    Get some helpers from the web
+    -->
+	<target name="init.depend" depends="init">
+		<property name="proxy.host" value="" />
+		<property name="proxy.port" value="80" />
+		<echo>If you are behind a proxy or firewall, you can set the properties:
+			proxy.host
+			proxy.port
+    		</echo>
+		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
+		<!--get src="https://jlearn.mit.edu/TEALsim/xdocs/xsl/changelog-text.xsl?rev=1.1&amp;content-type=application/xml" dest="${dependency.dir}/changelog-text.xsl" usetimestamp="yes" ignoreerrors="yes" /-->
+	</target>
+	<target name="copy_jnlp">
+		<mkdir dir="${build.dir}/jnlp" />
+		<filter token="WebURL" value="${publish.web.url}" />
+		<copy todir="${build.dir}/jnlp" filtering="on">
+			<fileset refid="jnlp_em" />
+			<fileset refid="jnlp_examples" />
+			<fileset refid="jnlp_misc" />
+		</copy>
+	</target>
+	<target name="copy_core" depends="init">
+		<echo>Now copying TEAL-core:</echo>
+		<copy filtering="off" todir="${build.dir}/src">
+			<fileset refid="src_core" />
+			<fileset refid="images_core" />
+		</copy>
+	</target>
+	<target name="copy_sims" depends="init">
+		<echo>Now copying TEAL simulations:</echo>
+		<copy filtering="off" todir="${build.dir}/src">
+			<fileset refid="src_sims" />
+		</copy>
+	</target>
+	<target name="copy_isocket" depends="init">
+		<copy filtering="off" todir="${build.dir}/src">
+			<fileset refid="src_isocket" />
+		</copy>
+	</target>
+	<target name="copy_ilab" depends="init">
+		<echo>Now copying TEAL iLab:</echo>
+		<copy filtering="off" todir="${build.dir}/src">
+			<fileset refid="src_ilab" />
+		</copy>
+	</target>
+	<target name="build_core" depends="init,copy_core">
+		<echo>Now building TEAL-core:</echo>
+		<javac srcdir="${build.dir}/src" destdir="${build.dir}/classes" includes="teal/**" debug="on" optimize="off">
+			<classpath>
+				<pathelement location="java/lib/l2fprod-common-tasks.jar" />
+				<pathelement location="${j3djar.dir}/windows/j3dcore.jar" />
+				<pathelement location="${j3djar.dir}/windows/j3dutils.jar" />
+				<pathelement location="${j3djar.dir}/windows/j3dcore-ogl_dll.jar" />
+				<pathelement location="${j3djar.dir}/windows/j3dcore-d3d_dll.jar" />
+				<pathelement location="${j3djar.dir}/windows/j3dutils-dll.jar" />
+				<pathelement location="${j3djar.dir}/vecmath.jar" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="build_sims" depends="init,copy_sims,build_core">
+		<echo>Now building TEALsim:</echo>
+		<javac srcdir="${build.dir}/src" destdir="${build.dir}/classes" excludes="tealsim.physics.ilab" includes="tealsim/**" debug="on" optimize="off">
+		<classpath>
+						<pathelement location="java/lib/l2fprod-common-tasks.jar" />
+						<pathelement location="${j3djar.dir}/windows/j3dcore.jar" />
+						<pathelement location="${j3djar.dir}/windows/j3dutils.jar" />
+						<pathelement location="${j3djar.dir}/windows/j3dcore-ogl_dll.jar" />
+						<pathelement location="${j3djar.dir}/windows/j3dcore-d3d_dll.jar" />
+						<pathelement location="${j3djar.dir}/windows/j3dutils-dll.jar" />
+						<pathelement location="${j3djar.dir}/vecmath.jar" />
+					</classpath>
+			</javac>
+	</target>
+	<target name="build_isocket" depends="init,copy_isocket">
+		<echo>Now building isocket:</echo>
+
+		<javac debug="on" optimize="off" srcdir="${build.dir}/src" destdir="${build.dir}/classes" includes="isocket/**">
+			<classpath>
+				<pathelement location="java/lib/l2fprod-common-tasks.jar" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="build_ilab" depends="init,copy_ilab,build_core,build_isocket">
+		<echo>Now building TeachSpin:</echo>
+		<copy filtering="on" todir="${build.dir}/src">
+			<fileset dir="${basedir}/java/src">
+				<include name="tealsim/physics/em/TeachSpinBase.java" />
+				<include name="tealsim/physics/ilab/**" />
+			</fileset>
+		</copy>
+		<javac debug="on" optimize="off" srcdir="${build.dir}/src" destdir="${build.dir}/classes" includes="tealsim/physics/em/TeachSpinBase.java,tealsim/physics/ilab/**">
+			<classpath>
+							<pathelement location="java/lib/l2fprod-common-tasks.jar" />
+							<pathelement location="${j3djar.dir}/windows/j3dcore.jar" />
+							<pathelement location="${j3djar.dir}/windows/j3dutils.jar" />
+							<pathelement location="${j3djar.dir}/windows/j3dcore-ogl_dll.jar" />
+							<pathelement location="${j3djar.dir}/windows/j3dcore-d3d_dll.jar" />
+							<pathelement location="${j3djar.dir}/windows/j3dutils-dll.jar" />
+							<pathelement location="${j3djar.dir}/vecmath.jar" />
+						</classpath>
+		</javac>
+	</target>
+
+	<target name="jar_resources">
+		<description>package resource files</description>
+		<echo>Creating resourceJar:</echo>
+		<jar destfile="${basedir}/java/lib/TEALsim-resources.jar">
+			<fileset refid="resources" />
+			<manifest>
+				<attribute name="Built-by" value="${user.name}">
+				</attribute>
+				<attribute name="Built-on" value="${build.time}">
+				</attribute>
+				<section name="teal">
+					<attribute name="Specification-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Specification-Version" value="${version}">
+					</attribute>
+					<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+					<attribute name="Implementation-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Implementation-Version" value="${version}">
+					</attribute>
+					<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+				</section>
+			</manifest>
+		</jar>
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${basedir}/java/lib" includes="TEALsim-resources.jar" />
+		</signjar>
+	</target>
+
+	<target name="jar_core" depends="build_core">
+		<echo>Now building Jars:</echo>
+		<mkdir dir="${build.dir}/jars/">
+		</mkdir>
+		<echo>Now building TEALsim-core.jar:</echo>
+		<jar destfile="${build.dir}/jars/TEALsim-core.jar" compress="true">
+			<fileset refid="license" />
+			<fileset refid="classes_core" />
+			<fileset refid="images_core" />
+			<manifest>
+				<attribute name="Built-by" value="${user.name}">
+				</attribute>
+				<attribute name="Built-on" value="${build.time}">
+				</attribute>
+				<section name="teal">
+					<attribute name="Specification-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Specification-Version" value="${version}">
+					</attribute>
+					<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+					<attribute name="Implementation-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Implementation-Version" value="${version}">
+					</attribute>
+					<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+				</section>
+				<attribute name="Main-Class" value="teal.app.SimPlayerApp">
+				</attribute>
+			</manifest>
+		</jar>
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${build.dir}/jars" includes="TEALsim-core.jar" />
+		</signjar>
+	</target>
+	<target name="jar_sims" depends="build_sims">
+		<echo>Now building TEALsim-simulations.jar:</echo>
+
+		<jar destfile="${build.dir}/jars/TEALsim-simulations.jar" compress="true">
+			<fileset refid="license" />
+			<fileset refid="classes_tealsim" />
+			<fileset refid="resources" />
+			<manifest>
+				<attribute name="Built-by" value="${user.name}">
+				</attribute>
+				<attribute name="Built-on" value="${build.time}">
+				</attribute>
+				<section name="tealsim">
+					<attribute name="Specification-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Specification-Version" value="${version}">
+					</attribute>
+					<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+					<attribute name="Implementation-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Implementation-Version" value="${version}">
+					</attribute>
+					<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+				</section>
+			</manifest>
+		</jar>
+
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${build.dir}/jars" includes="TEALsim-simulations.jar" />
+		</signjar>
+	</target>
+
+	<target name="jar_one" depends="build_core,build_sims,build_ilab">
+		<echo>Now building single jar:</echo>
+		<mkdir dir="${build.dir}/jars/">
+		</mkdir>
+		<jar destfile="${build.dir}/jars/TEALsim-all.jar" compress="true">
+			<fileset refid="license" />
+			<fileset refid="classes_core" />
+			<fileset refid="images_core" />
+			<fileset refid="classes_tealsim" />
+			<fileset refid="classes_isocket" />
+			<fileset refid="classes_ilab" />
+			<fileset refid="resources" />
+			<manifest>
+				<attribute name="Built-by" value="${user.name}">
+				</attribute>
+				<attribute name="Built-on" value="${build.time}">
+				</attribute>
+				<section name="teal">
+					<attribute name="Specification-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Specification-Version" value="${version}">
+					</attribute>
+					<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+					<attribute name="Implementation-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Implementation-Version" value="${version}">
+					</attribute>
+					<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+				</section>
+				<attribute name="Main-Class" value="teal.app.SimPlayerApp">
+				</attribute>
+			</manifest>
+		</jar>
+
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${build.dir}/jars" includes="TEALsim-all.jar" />
+		</signjar>
+	</target>
+
+	<target name="jar_ilab" depends="build_ilab">
+		<echo>Now building TeachSpin Jar:</echo>
+		<mkdir dir="${build.dir}/jars/">
+		</mkdir>
+		<jar destfile="${build.dir}/jars/TEALsim-ilab.jar" compress="true">
+			<fileset refid="license" />
+			<fileset refid="classes_core" />
+			<fileset refid="images_core" />
+			<fileset dir="${build.dir}/classes">
+				<include name="isocket/*.*" />
+				<include name="tealsim/physics/em/TeachSpinBa*.*" />
+				<include name="tealsim/physics/ilab/TeachS*.*" />
+				<include name="tealsim/physics/ilab/Force*.*" />
+			</fileset>
+			<fileset dir="resources">
+				<exclude name="CVS/*.*" />
+				<include name="help/ForceOnDipoleLabVIEW.*" />
+				<include name="models/1_Coil_1.3DS" />
+				<include name="models/COILMAP3.JPG" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-by" value="${user.name}">
+				</attribute>
+				<attribute name="Built-on" value="${build.time}">
+				</attribute>
+				<section name="teal">
+					<attribute name="Specification-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Specification-Version" value="${version}">
+					</attribute>
+					<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+					<attribute name="Implementation-Title" value="${project.fullname}">
+					</attribute>
+					<attribute name="Implementation-Version" value="${version}">
+					</attribute>
+					<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+					</attribute>
+				</section>
+				<attribute name="Main-Class" value="teal.app.ForceOnDipoleLVApp">
+				</attribute>
+			</manifest>
+		</jar>
+
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${build.dir}/jars" includes="TEALsim-ilab.jar" />
+		</signjar>
+	</target>
+
+	<target name="core_release" depends="init">
+		<tstamp>
+			<format property="touch.time" pattern="MMddyyyyhhmm" unit="hour" />
+		</tstamp>
+
+		<filter token="WEB" value="${publish.web.url}" />
+		<!--copy todir="${project.release}" filtering="on" overwrite="yes"-->
+		<!--fileset dir="src/jnlp/" includes="PDBViewer.jnlp" /-->
+		<!--/copy-->
+
+		<mkdir dir="${publish.local.dir}" />
+
+		<jar basedir="${project.classes}" compress="true" destfile="${publish.local.dir}/TEALcore.jar">
+			<exclude name="CVS/*.*" />
+			<include name="teal/**/*" />
+			<include name="isocket/**/*" />
+			<include name="tealsim/**/*.*" />
+			<include name="resources/**/*.*" />
+		</jar>
+
+		<!--jar basedir="${project.classes}" compress="true" destfile="${project.release}/pdb.jar"-->
+		<!--exclude name="CVS/*.*" /-->
+		<!--include name="color/**/*.*" /-->
+		<!--include name="plugin/**/*.*" /-->
+		<!--include name="pdb/**/*.*" /-->
+		<!--include name="tealsim/biochem/**/*.*" /-->
+		<!--include name="resources/pdb/**/*.*" /-->
+		<!--/jar-->
+
+		<copy todir="${publish.local.dir}" overwrite="no">
+			<fileset dir="lib/" includes="wsdl4j-1.5.1.jar" />
+			<fileset dir="lib/" includes="saaj.jar" />
+			<fileset dir="lib/" includes="log4j.jar" />
+			<fileset dir="lib/" includes="jaxrpc.jar" />
+			<fileset dir="lib/" includes="commons-logging-1.0.4.jar" />
+			<fileset dir="lib/" includes="commons-discovery-0.2.jar" />
+			<fileset dir="lib/" includes="axis-schema.jar" />
+			<fileset dir="lib/" includes="axis-ant.jar" />
+			<fileset dir="lib/" includes="axis.jar" />
+			<fileset dir="lib/" includes="log4j.properties" />
+		</copy>
+
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${publish.local.dir}" includes="*.jar" />
+		</signjar>
+	</target>
+
+	<target name="distribution" depends="clean,init,sdk,dist">
+	</target>
+
+	<target name="dist" depends="copy_jnlp,jar_core,jar_sims">
+		<echo>Zipping the built distribution:</echo>
+		<zip destfile="${release.dir}/${project}-build-${version}-${build.version}.zip">
+			<zipfileset refid="license" prefix="${project}-${version}" />
+			<zipfileset dir="${build.dir}/jars" includes="TEALsim-core.jar,TEALsim-simulations.jar" prefix="${project}-${version}/lib" />
+			<zipfileset dir="${build.dir}/jnlp" prefix="${project}-${version}/jnlp" />
+		</zip>
+	</target>
+	<target name="sdk" depends="copy_jnlp,copy_core,copy_sims">
+		<echo>Zipping the SDK:</echo>
+		<zip destfile="${release.dir}/${project}-SDK-${version}-${build.version}.zip">
+			<zipfileset refid="license" prefix="${project}-${version}" />
+			<zipfileset dir="${build.dir}/jnlp" prefix="${project}-${version}/java/jnlp" />
+			<zipfileset dir="${basedir}/java/lib" prefix="${project}-${version}/java/lib">
+				<include name="TEALsim-resources.jar" />
+				<include name="jreleaseinfo-1.2.0.jar" />
+				<include name="l2fprod-common-tasks.jar" />
+			</zipfileset>
+			<zipfileset dir="${build.dir}/src" prefix="${project}-${version}/java/src">
+				<exclude name="isocket" />
+				<exclude name="tealsim/physics/ilab" />
+				<include name="**/*.*" />
+			</zipfileset>
+			<zipfileset refid="resources" prefix="${project}-${version}/resources" />
+		</zip>
+	</target>
+
+	<target name="javadoc" depends="copy_core,copy_sims">
+		<echo>generate the documentation </echo>
+		<mkdir dir="${javadoc.dir}" />
+
+		<javadoc destdir="${javadoc.dir}" private="false" protected="true" version="false" author="true" includenosourcepackages="true" use="false" stylesheetfile="xdocs/javadoc.css" splitindex="true" windowtitle="${project.fullname} ${version} API" doctitle="${project.fullname} ${version}" bottom="Copyright (c) ${year} MIT TEAL/Studio Physics Project. All Rights Reserved.">
+			<packageset dir="${build.dir}/src" defaultexcludes="yes">
+				<exclude name="isocket" />
+				<exclude name="tealsim/physics/ilab" />
+			</packageset>
+			<group title="TEAL API" packages="teal.*" />
+			<group title="TEAL Simulations" packages="tealsim.*" />
+		</javadoc>
+	</target>
+
+	<target name="zip_javadoc" depends="javadoc">
+		<echo>Zipping the SDK:</echo>
+		<zip destfile="${release.dir}/${project}-SDK-${version}-${build.version}.zip">
+			<zipfileset dir="${javadoc.dir}" prefix="${project}-${version}/doc/api" />
+		</zip>
+	</target>
+	<target name="javadocall" depends="copy_core,copy_sims,copy_isocket,copy_ilab">
+		<!-- generate the documentation -->
+
+		<mkdir dir="${javadoc.dir}" />
+
+		<javadoc destdir="${javadoc.dir}" private="false" protected="true" version="false" author="true" includenosourcepackages="true" use="false" stylesheetfile="xdocs/javadoc.css" splitindex="true" windowtitle="${project.fullname} ${version} API" doctitle="${project.fullname} ${version}" bottom="Copyright (c) ${year} MIT TEAL/Studio Physics Project. All Rights Reserved.">
+
+			<fileset dir="${build.dir}/src/">
+				<include name="teal/**/*.java" />
+				<include name="teal**/*.html" />
+			</fileset>
+		</javadoc>
+	</target>
+
+
+	<!--
+    Publish the new version of TEALsim
+  -->
+	<target name="publish" depends="init,dist">
+		<!-- copy zip to dist folder -->
+		<!--copy todir="${publish.download.dir}" file="${project}-${version}-${build.version}.zip" /-->
+
+		<filter token="WEB" value="${publish.web.url}" />
+		<!-- update the jnlp website with the new release -->
+		<!-- put skinlf.jar in jnlp folder -->
+		<copy todir="${publish.project.home}/simulations/" filtering="on" overwrite="yes">
+			<fileset dir="java/jnlp" includes="*.jnlp" />
+		</copy>
+		<copy todir="${publish.project.home}" filtering="on" overwrite="yes">
+			<fileset dir="xdocs" includes="*.html" />
+		</copy>
+		<copy file="${build.dir}/lib/${project}-core.jar" todir="${publish.project.home}/simulations/lib/" />
+		<copy file="${build.dir}/lib/${project}-examples.jar" todir="${publish.project.home}/simulations/lib/" />
+		<!--copy file="${build.dir}/lib/${project}-simulations.jar" todir="${publish.project.home}/simulations/lib/" /-->
+
+		<!-- Sign all Jars -->
+		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+			<fileset dir="${publish.project.home}/simulations/lib" includes="*.jar" />
+		</signjar>
+
+		<!--ftp server="${build.www.server}" userid="${build.www.userid}" password="${build.www.password}" remotedir="${build.www.remotedir}/jnlp" action="put" verbose="yes" depends="yes">
+			<fileset dir="${build.www.dir}/jnlp">
+				<include name="*" />
+			</fileset>
+		</ftp-->
+	</target>
+<target name="jar_j3d">
+	<mkdir dir="${build.dir}/jars/java3d/windows/1.4_0" />
+	<copy filtering="on" todir="${build.dir}/jars/java3d/windows/1.4_0">
+				<fileset dir="${basedir}/java/lib/java3d/windows/1.4_0" includes="*.jar,*.rtf" />
+			</copy>
+	<jar destfile="${build.dir}/jars/java3d/windows/1.4_0/j3dcore-d3d-dll.jar" compress="true">
+				<fileset dir="${basedir}/java/lib/java3d/windows/1.4_0" includes="j3dcore-d3d.dll" />
+				
+				<manifest>
+					<attribute name="Built-by" value="${user.name}">
+					</attribute>
+					
+					<section name="java3d">
+						<attribute name="Specification-Title" value="Java3D support for TEALsim">
+						</attribute>
+						<attribute name="Specification-Version" value="1.4_0">
+						</attribute>
+						<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+						</attribute>
+						<attribute name="Implementation-Title" value="${project.fullname}">
+						</attribute>
+						<attribute name="Implementation-Version" value="1.4_0">
+						</attribute>
+						<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+						</attribute>
+					</section>
+				</manifest>
+			</jar>
+	<jar destfile="${build.dir}/jars/java3d/windows/1.4_0/j3dcore-ogl-dll.jar" compress="true">
+					<fileset dir="${basedir}/java/lib/java3d/windows/1.4_0" includes="j3dcore-ogl.dll" />
+					
+					<manifest>
+						<attribute name="Built-by" value="${user.name}">
+						</attribute>
+						
+						<section name="java3d">
+							<attribute name="Specification-Title" value="Java3D support for TEALsim">
+							</attribute>
+							<attribute name="Specification-Version" value="1.4_0">
+							</attribute>
+							<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+							</attribute>
+							<attribute name="Implementation-Title" value="${project.fullname}">
+							</attribute>
+							<attribute name="Implementation-Version" value="1.4_0">
+							</attribute>
+							<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+							</attribute>
+						</section>
+					</manifest>
+				</jar>
+	<jar destfile="${build.dir}/jars/java3d/windows/1.4_0/j3dutils-dll.jar" compress="true">
+					<fileset dir="${basedir}/java/lib/java3d/windows/1.4_0" includes="j3dutils.dll" />
+					
+					<manifest>
+						<attribute name="Built-by" value="${user.name}">
+						</attribute>
+						
+						<section name="java3d">
+							<attribute name="Specification-Title" value="Java3D support for TEALsim">
+							</attribute>
+							<attribute name="Specification-Version" value="1.4_0">
+							</attribute>
+							<attribute name="Specification-Vendor" value="MIT TEAL/Studio Physics Project">
+							</attribute>
+							<attribute name="Implementation-Title" value="${project.fullname}">
+							</attribute>
+							<attribute name="Implementation-Version" value="1.4_0">
+							</attribute>
+							<attribute name="Implementation-Vendor" value="MIT TEAL/Studio Physics Project">
+							</attribute>
+						</section>
+					</manifest>
+				</jar>
+
+	<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
+				<fileset dir="${build.dir}/jars/java3d/windows/1.4_0" includes="*.jar" />
+	</signjar>
+</target>
+
+</project>
