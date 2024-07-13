@@ -138,7 +138,7 @@ public class FaradaysLaw extends SimEM {
         double scale3DS = 0.045; // this is an overall scale factor for these .3DS objects
         Loader3DS max = new Loader3DS();
         BranchGroup bg01 = 
-         max.getBranchGroup("models/currentring.3DS",
+         max.getBranchGroup("models/currentring_old.3DS",
          "models/");
         currentSpheresNode.setScale(scale3DS);
         currentSpheresNode.addContents(bg01);
