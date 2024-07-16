@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for TEALsim -->
+<jnlp spec="1.0+" codebase="@WEB@/simulations/wpi" href="simplependulum.jnlp">
+  <information>
+    <title>Simple Pendulum Simulation</title>
+    <vendor>TEAL/Studio Physics Project</vendor>
+    <homepage href="@WEB@"/>
+    <description>Simple Pendulum Simulation</description>
+    <offline-allowed/>
+  </information>
+  <security> 
+      <all-permissions/> 
+  </security> 
+  <resources>
+    <j2se version="1.4+" initial-heap-size="64m" max-heap-size="512m"/>
+    <jar href="lib/TEALsim-core.jar" download="eager"/>
+    <jar href="lib/TEALsim-app.jar" download="eager"/>
+	<extension name="Java3D" href="lib/j3d/Java3D.jnlp"/>
+  </resources> 
+  <application-desc main-class="teal.app.SimPlayerApp">
+     <argument>-n</argument>
+     <argument>tealsim.physics.em.SimplePendulumApp</argument>
+  </application-desc>
+</jnlp> 
+
