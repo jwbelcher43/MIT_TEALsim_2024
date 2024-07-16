@@ -1,5 +1,6 @@
 The TEALsim Java 3D applets
 https://icampus.mit.edu/projects/teal/ 
+
 MIT TEALsim Software License
 
 Copyright (c) 2005 The Massachusetts Institute of Technology. All
