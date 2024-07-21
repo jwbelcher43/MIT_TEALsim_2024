@@ -57,7 +57,7 @@ public class Example_01 extends SimEM {
     
     public Example_01() {
         super();
-        System.out.println("here");
+//        System.out.println("here");
         TDebug.setGlobalLevel(0);
         title = "Example_01";
         
@@ -100,8 +100,8 @@ public class Example_01 extends SimEM {
         addElement(importedObject01);
 
         BranchGroup bg02 = 
-         max.getBranchGroup("models/Helmholtz.3DS", "models/");
-        node02.setScale(.2);
+         max.getBranchGroup("models/cone.3DS", "models/");
+        node02.setScale(scale3DS);
         node02.addContents(bg02);
         
         importedObject02.setNode3D(node02);
