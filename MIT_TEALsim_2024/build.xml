@@ -316,9 +316,7 @@
 				</section>
 			</manifest>
 		</jar>
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${basedir}/java/lib" includes="TEALsim-resources.jar" />
-		</signjar>
+
 	</target>
 
 	<target name="jar_core" depends="build_core">
@@ -353,9 +351,7 @@
 				</attribute>
 			</manifest>
 		</jar>
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${build.dir}/jars" includes="TEALsim-core.jar" />
-		</signjar>
+
 	</target>
 	<target name="jar_sims" depends="build_sims">
 		<echo>Now building TEALsim-simulations.jar:</echo>
@@ -386,9 +382,6 @@
 			</manifest>
 		</jar>
 
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${build.dir}/jars" includes="TEALsim-simulations.jar" />
-		</signjar>
 	</target>
 
 	<target name="jar_one" depends="build_core,build_sims,build_ilab">
@@ -427,9 +420,7 @@
 			</manifest>
 		</jar>
 
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${build.dir}/jars" includes="TEALsim-all.jar" />
-		</signjar>
+
 	</target>
 
 	<target name="jar_ilab" depends="build_ilab">
@@ -476,9 +467,7 @@
 			</manifest>
 		</jar>
 
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${build.dir}/jars" includes="TEALsim-ilab.jar" />
-		</signjar>
+
 	</target>
 
 	<target name="core_release" depends="init">
@@ -523,9 +512,7 @@
 			<fileset dir="lib/" includes="log4j.properties" />
 		</copy>
 
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${publish.local.dir}" includes="*.jar" />
-		</signjar>
+
 	</target>
 
 	<target name="distribution" depends="clean,init,sdk,dist">
@@ -614,9 +601,7 @@
 		<!--copy file="${build.dir}/lib/${project}-simulations.jar" todir="${publish.project.home}/simulations/lib/" /-->
 
 		<!-- Sign all Jars -->
-		<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-			<fileset dir="${publish.project.home}/simulations/lib" includes="*.jar" />
-		</signjar>
+
 
 		<!--ftp server="${build.www.server}" userid="${build.www.userid}" password="${build.www.password}" remotedir="${build.www.remotedir}/jnlp" action="put" verbose="yes" depends="yes">
 			<fileset dir="${build.www.dir}/jnlp">
@@ -699,9 +684,7 @@
 					</manifest>
 				</jar>
 
-	<signjar keystore="xdocs/TEALKey" alias="tealkey" storepass="galileo">
-				<fileset dir="${build.dir}/jars/java3d/windows/1.4_0" includes="*.jar" />
-	</signjar>
+
 </target>
 
 </project>
