@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="TEALsim" default="distribution">
-
+	<!-- New Line for commit check -->
 	<property file="build.properties" />
 	<property name="project" value="TEALsim" />
 	<property name="project.fullname" value="TEALsim" />
