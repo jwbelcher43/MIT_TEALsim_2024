@@ -81,6 +81,9 @@ public class Example_01 extends SimEM {
         nativeObject02.addPropertyChangeListener(this);
         addElement(nativeObject02);           
 
+        //  print out a line
+        
+        System.out.println( "Hello From Example_01!" );
  // import two .3DS files objects using Loader3DS
  // The conversion between max units and Java3D units 
  // is 1 Java3D unit = 1 Max inch
