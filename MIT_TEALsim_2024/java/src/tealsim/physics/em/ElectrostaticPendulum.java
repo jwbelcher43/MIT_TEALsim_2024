@@ -30,6 +30,7 @@ import teal.math.RectangularPlane;
 import teal.render.Rendered;
 import teal.render.j3d.loaders.Loader3DS;
 import teal.sim.collision.SphereCollisionController;
+import teal.sim.constraint.ArcConstraint;
 import teal.sim.control.VisualizationControl;
 import teal.sim.engine.EngineObj;
 import teal.sim.engine.TEngine;
@@ -110,8 +111,8 @@ public class ElectrostaticPendulum extends SimEM {
         TDebug.setGlobalLevel(0);
 
         // Building the world.
-        theEngine.setDamping(0.1);
-        theEngine.setGravity(new Vector3d(0., 0.,-.0));
+        theEngine.setDamping(0.0);
+        theEngine.setGravity(new Vector3d(0., -.1,0.));
         
         // import two .3DS files objects using Loader3DS
         // The conversion between max units and Java3D units 
@@ -123,13 +124,27 @@ public class ElectrostaticPendulum extends SimEM {
         
         
         ShapeNode ShapeNodeNative01 = new ShapeNode();
+        /** A TEALsim native object (a green sphere).  */
+        Rendered nativeObject02 = new Rendered();
+        ShapeNode ShapeNodeNative02 = new ShapeNode();
         
-        ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, .1, 15.));
+        ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, .2, 15.));
         nativeObject01.setNode3D(ShapeNodeNative01);
         nativeObject01.setColor(new Color(0, 0, 0));
-        nativeObject01.setPosition(new Vector3d(0,0.,0.));
-        nativeObject01.setDirection(new Vector3d(1.,0.,0.));
+        nativeObject01.setPosition(new Vector3d(0,10.,0.));
+        nativeObject01.setDirection(new Vector3d(0.,1.,0.));
         addElement(nativeObject01);
+        
+        ShapeNodeNative02.setGeometry(Cylinder.makeGeometry(32, 10., .1));
+        nativeObject02.setNode3D(ShapeNodeNative02);
+        nativeObject02.setColor(new Color(0, 0, 0));  
+        nativeObject02.setPosition(new Vector3d(0, 0, 0));
+        nativeObject02.setDirection(new Vector3d(0.,1.,0.));
+        nativeObject02.setSelectable(true);
+        nativeObject02.setPickable(true);
+        nativeObject02.setMoveable(false);
+        nativeObject02.addPropertyChangeListener(this);
+        addElement(nativeObject02);      
         
         double scale3DS = 3.; // this is an overall scale factor for these .3DS objects
         // Creating components.
@@ -139,7 +154,7 @@ public class ElectrostaticPendulum extends SimEM {
          max.getBranchGroup("models/PendMagJohn.3DS",
          "models/");
         node01.setScale(scale3DS);
-        node01.addContents(bg01);
+ //       node01.addContents(bg01);
         
         importedObject01.setNode3D(node01);
         importedObject01.setPosition(new Vector3d(0., -1., 0.));
@@ -202,7 +217,7 @@ public class ElectrostaticPendulum extends SimEM {
         chargeNW.setPickable(false);
         chargeNW.setColliding(false);
         chargeNW.setGeneratingP(true);
-        chargeNW.setPosition(new Vector3d(-11.4, 11.4, 0.));
+        chargeNW.setPosition(new Vector3d(0., 0., 0.));
         chargeNW.setMoveable(false);
         SphereCollisionController sccx = new SphereCollisionController(chargeNW);
         sccx.setRadius(pointChargeRadius);
@@ -215,38 +230,43 @@ public class ElectrostaticPendulum extends SimEM {
         chargeNE.setRadius(pointChargeRadius);
         //chargeNE.setPauliDistance(4.*pointChargeRadius);
         chargeNE.setMass(1.0);
-        chargeNE.setCharge(6.0);
+        chargeNE.setCharge(-6.0);
         chargeNE.setID("chargeNW");
         chargeNE.setPickable(false);
         chargeNE.setColliding(false);
         chargeNE.setGeneratingP(true);
-        chargeNE.setPosition(new Vector3d(11.4, 11.4, 0.));
+        chargeNE.setPosition(new Vector3d(3, 0., 0.));
         chargeNE.setMoveable(false);
         sccx = new SphereCollisionController(chargeNE);
         sccx.setRadius(pointChargeRadius);
         sccx.setTolerance(0.1);
         sccx.setMode(SphereCollisionController.WALL_SPHERE);
         chargeNE.setCollisionController(sccx);
-        addElement(chargeNE);
+       addElement(chargeNE);
 
         playerCharge = new PointCharge();
         playerCharge.setRadius(pointChargeRadius);
         //playerCharge.setPauliDistance(4.*pointChargeRadius);
         playerCharge.setMass(1.0);
-        playerCharge.setCharge(-1.0);
+        playerCharge.setCharge(1.0);
         playerCharge.setID("playerCharge");
         playerCharge.setPickable(false);
         playerCharge.setColliding(true);
         playerCharge.setGeneratingP(true);
-        playerCharge.setPosition(new Vector3d(-11., -10., 0.));
+        playerCharge.setPosition(new Vector3d(0.,0., 0.));
         playerCharge.setMoveable(true);
+        playerCharge.setConstrained(true);
         sccx = new SphereCollisionController(playerCharge);
         sccx.setRadius(pointChargeRadius);
         sccx.setTolerance(0.1);
         sccx.setMode(SphereCollisionController.WALL_SPHERE);
         playerCharge.setCollisionController(sccx);
         //playerCharge.addPropertyChangeListener("charge",this );
-        addElement(playerCharge);
+         addElement(playerCharge);
+         
+ 		ArcConstraint arc = new ArcConstraint(new Vector3d(.04,10.,0.), new Vector3d(0.,0.,1.), 8.);
+		playerCharge.addConstraint(arc);
+ 		
         int maxStep = 100;
         int numberFL = 12;
         fmanager = new FieldLineManager();
@@ -260,7 +280,7 @@ public class ElectrostaticPendulum extends SimEM {
             fl = new RelativeFLine(chargeNE, ((j + 1) / 48.) * Math.PI * 2.);
             fl.setType(Field.E_FIELD);
             fl.setKMax(maxStep);
-            fmanager.addFieldLine(fl);
+           fmanager.addFieldLine(fl);
 
             fl = new RelativeFLine(playerCharge, ((j + 1) / 48.) * Math.PI * 2.);
             fl.setType(Field.E_FIELD);
@@ -344,7 +364,6 @@ public class ElectrostaticPendulum extends SimEM {
         ta = new TealAction("Level Complete", "Level Complete", this);
         watch.setAction(ta);
 
-        
 
         
     }
@@ -376,11 +395,11 @@ public class ElectrostaticPendulum extends SimEM {
     }
 
     private void resetPointCharges() {
-        playerCharge.setPosition(new Vector3d(-11, -10.0, 0.));
+        playerCharge.setPosition(new Vector3d(0, 10, 0));
     }
 
     public void resetCamera() {
-        mViewer.setLookAt(new Point3d(0.0, 0.0, 2.0), new Point3d(), new Vector3d(1., 0., 0.));
+    	mViewer.setLookAt(new Point3d(0,.2,2.), new Point3d(0,0,0), new Vector3d(0,1,0));
 
     }
 

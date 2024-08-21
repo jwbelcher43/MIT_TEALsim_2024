@@ -68,7 +68,7 @@ public class Example_01 extends SimEM {
         nativeObject01.setNode3D(ShapeNodeNative01);
         nativeObject01.setColor(new Color(0, 0, 0));
         nativeObject01.setPosition(new Vector3d(0,0.,0.));
-        nativeObject01.setDirection(new Vector3d(0.,1.,0.));
+        nativeObject01.setDirection(new Vector3d(1.,0.,0.));
         addElement(nativeObject01);
         
         ShapeNodeNative02.setGeometry(Sphere.makeGeometry(16,.5));
@@ -213,7 +213,7 @@ public class Example_01 extends SimEM {
     }
 
     public void resetCamera() {
-        mViewer.setLookAt(new Point3d(0.0, 0.025, 0.4), 
+        mViewer.setLookAt(new Point3d(0.0, 0.025, 0.8), 
         	new Point3d(0., 0.025, 0.), new Vector3d(0., 1., 0.));
      
     }
