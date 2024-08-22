@@ -17,7 +17,7 @@ import javax.vecmath.Vector3d;
  * @author mesrob
  *
  */
-public class ArcConstraint implements Constraint {
+public class SphericalArcConstraint implements Constraint {
 
 	/* We will represent an arc by its center, radius and a vector which
 	 * is the normal to the plane of the arc.
@@ -27,7 +27,7 @@ public class ArcConstraint implements Constraint {
 	protected double radius = 1.;
 	protected Vector3d lastReaction = new Vector3d();
 
-	public ArcConstraint( Vector3d ccenter, Vector3d nnormal, double rradius ) {
+	public SphericalArcConstraint( Vector3d ccenter, Vector3d nnormal, double rradius ) {
 		setCoefficients( ccenter, nnormal, rradius );
 	}
 
@@ -114,10 +114,10 @@ public class ArcConstraint implements Constraint {
 	}
 
 	public void set( Constraint c ) {
-		if( c instanceof ArcConstraint ) {
-			setCoefficients(	((ArcConstraint) c).getCenter(),
-								((ArcConstraint) c).getNormal(),
-								((ArcConstraint) c).getRadius() );
+		if( c instanceof SphericalArcConstraint ) {
+			setCoefficients(	((SphericalArcConstraint) c).getCenter(),
+								((SphericalArcConstraint) c).getNormal(),
+								((SphericalArcConstraint) c).getRadius() );
 		}	
 	}
 	
