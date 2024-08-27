@@ -126,7 +126,7 @@ public class ElectrostaticPendulum extends SimEM {
         ShapeNode ShapeNodeNative01 = new ShapeNode();
         /** A TEALsim native object (a green sphere).  */
 
-        double lengthPendulum=23;  // maximum of 23
+        double lengthPendulum=20.;  // maximum of 23
         double heightSupport = 25.;
         ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, .2, lengthPendulum));
         nativeObject01.setNode3D(ShapeNodeNative01);
@@ -134,7 +134,7 @@ public class ElectrostaticPendulum extends SimEM {
         nativeObject01.setPosition(new Vector3d(0,heightSupport,0.));
         nativeObject01.setModelOffsetPosition(new Vector3d(0,-lengthPendulum/2,0.));
         nativeObject01.setDirection(new Vector3d(1.,0,0.));
-        addElement(nativeObject01);
+//        addElement(nativeObject01);
         
         
         double scale3DS = 3.; // this is an overall scale factor for these .3DS objects
@@ -142,7 +142,7 @@ public class ElectrostaticPendulum extends SimEM {
        Loader3DS max = new Loader3DS();
     	
         BranchGroup bg01 = 
-         max.getBranchGroup("models/Arm_Base.3DS",
+         max.getBranchGroup("models/ArmBase.3DS",
          "models/");
         node01.setScale(scale3DS);
       node01.addContents(bg01);
@@ -166,7 +166,7 @@ public class ElectrostaticPendulum extends SimEM {
         chargeNW.setRadius(pointChargeRadius);
         //chargeNW.setPauliDistance(4.*pointChargeRadius);
         chargeNW.setMass(1.0);
-        chargeNW.setCharge(100.0);
+        chargeNW.setCharge(-100.0);
         chargeNW.setID("chargeNW");
         chargeNW.setPickable(false);
         chargeNW.setColliding(false);
@@ -184,12 +184,12 @@ public class ElectrostaticPendulum extends SimEM {
         chargeNE.setRadius(pointChargeRadius);
         //chargeNE.setPauliDistance(4.*pointChargeRadius);
         chargeNE.setMass(1.0);
-        chargeNE.setCharge(-100.0);
+        chargeNE.setCharge(100.0);
         chargeNE.setID("chargeNW");
         chargeNE.setPickable(false);
         chargeNE.setColliding(false);
         chargeNE.setGeneratingP(true);
-        chargeNE.setPosition(new Vector3d(-3, 0., 0.));
+        chargeNE.setPosition(new Vector3d(-3., 0., 0.));
         chargeNE.setMoveable(false);
         sccx = new SphereCollisionController(chargeNE);
         sccx.setRadius(pointChargeRadius);
@@ -202,7 +202,7 @@ public class ElectrostaticPendulum extends SimEM {
         playerCharge.setRadius(pointChargeRadius);
         //playerCharge.setPauliDistance(4.*pointChargeRadius);
         playerCharge.setMass(1.0);
-        playerCharge.setCharge(1.0);
+        playerCharge.setCharge(1);
         playerCharge.setID("playerCharge");
         playerCharge.setPickable(false);
         playerCharge.setColliding(true);
@@ -214,33 +214,56 @@ public class ElectrostaticPendulum extends SimEM {
         sccx.setRadius(pointChargeRadius);
         sccx.setTolerance(0.1);
         sccx.setMode(SphereCollisionController.WALL_SPHERE);
-        playerCharge.setCollisionController(sccx);
         //playerCharge.addPropertyChangeListener("charge",this );
-         addElement(playerCharge);
+        addElement(playerCharge);
          
- 		ArcConstraint arc = new ArcConstraint(new Vector3d(.0,25.,0.), new Vector3d(0.,0.,1.), lengthPendulum);
+ 		ArcConstraint arc = new ArcConstraint(new Vector3d(.0,heightSupport,0.), new Vector3d(0.,0.,1.), lengthPendulum);
 		playerCharge.addConstraint(arc);
  		
         int maxStep = 200;
-        int numberFL = 12;
+
+        double startFL=pointChargeRadius/2.;
         fmanager = new FieldLineManager();
         fmanager.setElementManager(this);
-        for (int j = 0; j < 48; j++) {
-            RelativeFLine fl = new RelativeFLine(chargeNW, ((j + 1) / 48.) * Math.PI * 2.);
-            fl.setType(Field.E_FIELD);
-            fl.setKMax(maxStep);
-            fmanager.addFieldLine(fl);
+        
+        // put field lines on player charge
+        int numberFLA = 6;
+        int numberFLP =6;
+        for (int k = 0; k < numberFLP+2; k++) {
+        for (int j = 0; j < numberFLA; j++) {
 
-            fl = new RelativeFLine(chargeNE, ((j + 1) / 48.) * Math.PI * 2.);
-            fl.setType(Field.E_FIELD);
-            fl.setKMax(maxStep);
-           fmanager.addFieldLine(fl);
-
-            fl = new RelativeFLine(playerCharge, ((j + 1) / 48.) * Math.PI * 2.);
+            RelativeFLine fl = new RelativeFLine(playerCharge, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
             fl.setType(Field.E_FIELD);
             fl.setKMax(maxStep);
             fmanager.addFieldLine(fl);
         }
+        }
+        // put field lines on stationary NE charge
+        
+        numberFLA = 6;
+        numberFLP =6;
+        for (int k = 0; k < numberFLP+2; k++) {
+        for (int j = 0; j < numberFLA; j++) {
+            RelativeFLine fl = new RelativeFLine(chargeNE, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+            fl.setType(Field.E_FIELD);
+            fl.setKMax(maxStep);
+            fmanager.addFieldLine(fl);
+        }
+       }
+        
+      // put field lines on stationary NW charge
+        
+//        numberFLA = 2;
+//        numberFLP =3;
+        for (int k = 0; k < numberFLP+2; k++) {
+        for (int j = 0; j < numberFLA; j++) {
+            RelativeFLine fl = new RelativeFLine(chargeNW, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+            fl.setType(Field.E_FIELD);
+            fl.setKMax(maxStep);
+            fmanager.addFieldLine(fl);
+        }
+       }
+        
         fmanager.setSymmetryCount(2);
         theEngine.setBoundingArea(new BoundingSphere(new Point3d(), 12));
 

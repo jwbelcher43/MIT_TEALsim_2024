@@ -64,11 +64,11 @@ public class Example_01 extends SimEM {
  // create two objects using teal.render.geometry 
  // and add them to the scene
         
-        ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, 2., 0.05));
-        nativeObject01.setNode3D(ShapeNodeNative01);
+        ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, 3., 0.05));
+        nativeObject01.setNode3D(ShapeNodeNative01);   // makes the black disk
         nativeObject01.setColor(new Color(0, 0, 0));
         nativeObject01.setPosition(new Vector3d(0,0.,0.));
-        nativeObject01.setDirection(new Vector3d(1.,0.,0.));
+        nativeObject01.setDirection(new Vector3d(0.,1.,0.));
         addElement(nativeObject01);
         
         ShapeNodeNative02.setGeometry(Sphere.makeGeometry(16,.5));
@@ -143,7 +143,7 @@ public class Example_01 extends SimEM {
  // add the sliders to control groups and add those to the scene
 
         ControlGroup controls01 = new ControlGroup();
-        controls01.setText("Red Disk");
+        controls01.setText("Black Disk");
         controls01.add(posSlider01);
         addElement(controls01);
         

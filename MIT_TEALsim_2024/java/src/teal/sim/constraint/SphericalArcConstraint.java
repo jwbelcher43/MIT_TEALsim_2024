@@ -83,27 +83,29 @@ public class SphericalArcConstraint implements Constraint {
 	
 	public Vector3d getReaction(Vector3d position, Vector3d velocity, Vector3d action, double mass) {
 		
-		
+		// we are given the total force on the charge, action
 		System.out.println("   " );
 		System.out.println("action " + action.x + "   " + action.y + "   " + action.z );
 		Vector3d radial = new Vector3d(position);
-		radial.sub(center);
+// we calculate the unit radial vector from the center of the arc
 		radial.normalize();
-		
+		// we set up a new direction that is perpendicular to the radial direction and the normal to the plane.  why is this not normalized?
 		Vector3d tangential = new Vector3d();
 		tangential.cross(radial, normal);
-		
+		// we find the component of the force along the tangential direction
 		double effective = action.dot(tangential);
-		Vector3d reaction = new Vector3d(tangential);
-		reaction.scaleAdd(-effective, action);
-		reaction.negate();
+		Vector3d reaction = new Vector3d(tangential);  // we set the reaction to the negative of the force tangential 
+		reaction.scaleAdd(-effective, action);     // we then add in the action, which will kill the tangential force LEAVING the radial and normal force
+		reaction.negate();  // we then construct a vector which is missin the tangenial force and has the negative of the radial and normal forces
 
 		Vector3d centripetal = new Vector3d(radial);
 		centripetal.scale(-mass*velocity.lengthSquared()/radius);
 		
-		reaction.add(centripetal);
+		reaction.add(centripetal);  // now we add into this the centripetal force, so we now have a total force whiich has zero tangenaial force, the negative of the orginal radial and normal force, and the centipetal force
 		System.out.println("reaction " + reaction.x + "   " + reaction.y + "   " + reaction.z );
 		lastReaction.set(reaction);
+		// we return reaction, which is above us is added to the original the action.  This will cancel out the original radial and normal forces, leaving the original tangential force and the centripetal forces.  
+		// but since we are using mass =0, so we are just left with the original tangential force, and only that force.  
 		return reaction;
 	}
 

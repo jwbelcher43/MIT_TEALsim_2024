@@ -78,6 +78,7 @@ public class RelativeFLine extends FieldLine implements HasReference {
 
     public RelativeFLine(Referenced obj, double angle) {
         this(obj);
+		System.out.println(" angle " + angle + " angle  " + angle + " angle  " + angle );
         setOffset(angle);
     }
     
@@ -88,9 +89,10 @@ public class RelativeFLine extends FieldLine implements HasReference {
         setOffset(radius,angle);
     }
 
-    public RelativeFLine(Referenced obj, double angle, double radius) {
+    public RelativeFLine(Referenced obj, double angleA, double angleP, double radius) {
         this(obj);
-        setOffset(radius,angle);
+		System.out.println(" angleA " + angleA + " angleP " + angleP +" radius  " + radius  );
+        setOffset(radius,angleA,angleP);
     }
 
     public RelativeFLine(Referenced obj, double angle, int fieldType) {
@@ -173,7 +175,9 @@ public class RelativeFLine extends FieldLine implements HasReference {
         if (mElement != null) {
             BoundingSphere bs = new BoundingSphere(((EngineRendered) mElement).getBoundingArea());
             //r = 2.0 * bs.getRadius();
-            r = bs.getRadius();
+
+            r = bs.getRadius()/2.;
+//    		System.out.println(" r " + r + "   " + r + "   " + r );
         }
         setOffset(r, radians);
     }
@@ -191,7 +195,20 @@ public class RelativeFLine extends FieldLine implements HasReference {
         offset = sp;
         position = sp;
     }
-
+    public void setOffset(double r, double radiansA, double radiansP) {
+        Vector3d sp = new Vector3d();
+        sp.x += (r * Math.cos(radiansA)*Math.sin(radiansP));
+        sp.y += (r * Math.sin(radiansA)*Math.sin(radiansP));
+        sp.z+= (r * Math.cos(radiansP));
+        if (mElement != null) {
+            Quat4d q = new Quat4d(((EngineRendered) mElement).getRotation());
+            Transform3D t = new Transform3D();
+            t.setRotation(q);
+            t.transform(sp);
+        }
+        offset = sp;
+        position = sp;
+    }
     public void setOffset(Vector3d off) {
         offset = off;
         if (mElement != null) {

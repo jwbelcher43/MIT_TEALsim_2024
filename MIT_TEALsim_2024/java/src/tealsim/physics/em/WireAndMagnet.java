@@ -77,7 +77,7 @@ public class WireAndMagnet extends SimEM {
         
         theEngine.setBoundingArea(new BoundingSphere(new Point3d(), 10));
         theEngine.setDeltaTime(0.1); //0.25);
-        theEngine.setDamping(0.1);
+        theEngine.setDamping(0.9);
         theEngine.setGravity(new Vector3d(0., 0., 0.));
        
         
