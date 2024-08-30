@@ -42,34 +42,58 @@ public class RungeKutta4 {
 		double h_2 = stepsize / 2.;
 		double h_6 = stepsize / 6.;
 		double s_p_h_2 = s_start + h_2;
-
+//		System.out.println("    ");
+//		System.out.println("RungeKutta4    stepsize from line 48 of integrate(Integratable rk, double s_start, double stepsize) in RungeKutta4   " + stepsize + "  number dependent  " +n);
 		rk.getDependentValues(X_at_s, 0);
+//		System.out.println("   ");
+//		System.out.println("RungeKutta4   first  ");
 		rk.getDependentDerivatives(dXds_at_s, 0, s_start);
+//		System.out.println("   ");
+//	    for (int i =0; i < n; i++) {
+//	    	System.out.println(" i " + i + " dXds_at_s " + dXds_at_s[i]);}
 		for (int i = 0; i < n; i++) {
 			Xt[i] = X_at_s[i] + h_2 * dXds_at_s[i];
 		}
 
 		rk.setDependentValues(Xt, 0);
+//		System.out.println("   ");
+//		System.out.println("RungeKutta4   second  ");
 		rk.getDependentDerivatives(dXt, 0, s_p_h_2);
+//		System.out.println("   ");
+//	    for (int i =0; i < n; i++) {
+//	    	System.out.println(" i " + i + " dXt  " + dXt[i]);}
 		for (int i = 0; i < n; i++) {
 			Xt[i] = X_at_s[i] + h_2 * dXt[i];
 		}
 
 		rk.setDependentValues(Xt, 0);
+//		System.out.println("   ");
+//		System.out.println("RungeKutta4   third  ");
 		rk.getDependentDerivatives(dXm, 0, s_p_h_2);
+//		System.out.println("   ");
+//	    for (int i =0; i < n; i++) {
+//	    	System.out.println(" i " + i + " dXm  " + dXm[i]);}
 		for (int i = 0; i < n; i++) {
 			Xt[i] = X_at_s[i] + h * dXm[i];
 			dXm[i] = dXt[i] + dXm[i];
 		}
 
 		rk.setDependentValues(Xt, 0);
+//		System.out.println("   ");
+//		System.out.println("RungeKutta4   fourth  ");
 		rk.getDependentDerivatives(dXt, 0, s_start + h);
+//		System.out.println("   ");
+//	    for (int i =0; i < n; i++) {
+//	    	System.out.println( " i " + i +" dXt  " + dXt[i]);}
 		for (int i = 0; i < n; i++) {
 			X_at_sph[i] = X_at_s[i] + h_6
 					* (dXds_at_s[i] + dXt[i] + 2. * dXm[i]);
 		}
 
-		//		System.out.println( " End ----------------------------" );
+//	    System.out.println( " " );
+//	    for (int i =0; i < n; i++) {
+//	    	System.out.println( "RungeKutta4   i " + i + "   "  +X_at_sph[i] + "   " + dXds_at_s[i]);
+	 //   }
 		return X_at_sph;
 	}
     
@@ -300,7 +324,7 @@ public class RungeKutta4 {
 		array[n]=note;  // store in upper locations other variables, here is note
 		array[n+1]=hdid;  //  store the actualy size of the step we took
 		array[n+2]=hnext;  //  store the estimate of the next step that will be within eps error limit
-		//System.out.println( " n " + n + " length array " + array.length );
+//		System.out.println( " n " + n + " length array " + array.length );
 		array[n+3]=s;  // store independent variable for the end step here
 	    // now return new dependent value arrays plus other information in array
 	    return array;

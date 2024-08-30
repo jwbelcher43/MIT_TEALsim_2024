@@ -24,6 +24,7 @@ import teal.core.TUpdatable;
 import teal.physics.em.EMEngine;
 import teal.sim.collision.*;
 import teal.sim.constraint.ArcConstraint;
+import teal.sim.constraint.SphericalArcConstraint;
 import teal.sim.constraint.Constrainable;
 import teal.sim.constraint.Constraint;
 import teal.sim.constraint.SpringConstraint;
@@ -512,15 +513,56 @@ public class PhysicalObject extends EngineRendered implements PhysicalElement, H
     }
 
     public void setPosition(Vector3d pos, boolean sendPC) {
-        // Very special hack, that should be generalized to all types of constraint.
-    	if (is_constrained) {
+        // Very special hack, just for arc and spherical arc constraints, that should be generalized to all types of constraint.
+    	// code between /*     */ eliminated j belcher 8/29/2024
+/*    	if (is_constrained) {
         	// Ideally: constraint.adjustPosition(pos);
-        	Iterator it = constraints.iterator();
+       	Iterator it = constraints.iterator();
         	while (it.hasNext()) {
             //if (constraint instanceof ArcConstraint) {
         		Constraint c = (Constraint)it.next();
 	        	if (c instanceof ArcConstraint) {
 	            	ArcConstraint ac = (ArcConstraint) c;
+	                Vector3d center = ac.getCenter();
+	                Vector3d normal = ac.getNormal();
+	                double radius = ac.getRadius();
+	                Vector3d temp = new Vector3d();
+	        		System.out.println(" ");
+	        		System.out.println("Physical Object New     pos.x " + pos.x + "   " + pos.y + "   " + pos.z );
+	        		System.out.println("Physical Object New  radius " + radius + " center " + center.x + "   " + center.y + "   " + center.z );
+	                temp.set(pos);
+	                temp.sub(center);
+	        		System.out.println("Physical Object New     temp.x " + temp.x + "   " + temp.y + "   " + temp.z );
+	        		System.out.println("Physical Object New     normal.x " + normal.x + "   " + normal.y + "   " + normal.z );
+	                normal.scale(normal.dot(temp));
+	        		System.out.println("Physical Object New     normal.x " + normal.x + "   " + normal.y + "   " + normal.z );
+	                temp.sub(normal);
+	        		System.out.println("Physical Object New     temp.x " + temp.x + "   " + temp.y + "   " + temp.z );
+	                temp.normalize();
+	        		System.out.println("Physical Object New     temp.x " + temp.x + "   " + temp.y + "   " + temp.z );
+	                temp.scale(radius);
+	        		System.out.println("Physical Object New     temp.x " + temp.x + "   " + temp.y + "   " + temp.z );
+	                temp.add(center);
+	        		System.out.println("Physical Object New     temp.x " + temp.x + "   " + temp.y + "   " + temp.z );
+	                pos.set(temp);
+	        		System.out.println("Physical Object New     pos.x " + pos.x + "   " + pos.y + "   " + pos.z );	                
+	                
+	                Vector3d tt = new Vector3d(pos);
+                    tt.sub(center);
+                    
+                    
+                    
+	                Vector3d n = ac.getNormal();
+	                Vector3d v = new Vector3d();
+	                v.cross(n,tt);
+	                v.normalize();
+	                double veldotv = velocity_d.dot(v);
+	                v.scale(veldotv);
+ 	                velocity_d.set(v);     
+	            }
+	        	
+	        	if (c instanceof SphericalArcConstraint) {
+	            	SphericalArcConstraint ac = (SphericalArcConstraint) c;
 	                Vector3d center = ac.getCenter();
 	                Vector3d normal = ac.getNormal();
 	                double radius = ac.getRadius();
@@ -542,12 +584,11 @@ public class PhysicalObject extends EngineRendered implements PhysicalElement, H
 	                v.normalize();
 	                double veldotv = velocity_d.dot(v);
 	                v.scale(veldotv);
-	                velocity_d.set(v);
-	                
+	                velocity_d.set(v);     
 	            }
         	}
         }
-    	
+  */  	
     	position_d.set(pos);
         position_c.set(pos);
         super.setPosition(pos, sendPC);
