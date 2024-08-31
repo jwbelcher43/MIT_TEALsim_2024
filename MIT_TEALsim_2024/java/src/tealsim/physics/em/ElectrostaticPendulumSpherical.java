@@ -112,7 +112,7 @@ public class ElectrostaticPendulumSpherical extends SimEM {
         TDebug.setGlobalLevel(0);
 
         // Building the world.
-        theEngine.setDamping(0.0);
+        theEngine.setDamping(0.03);
         theEngine.setGravity(new Vector3d(0., -.3,0.));
         
         // import two .3DS files objects using Loader3DS
@@ -127,7 +127,7 @@ public class ElectrostaticPendulumSpherical extends SimEM {
         ShapeNode ShapeNodeNative01 = new ShapeNode();
         /** A TEALsim native object (a green sphere).  */
 
-        double lengthPendulum= 20.;  // maximum of 23
+        double lengthPendulum= 19.;  // maximum of 23
         double heightSupport = 25.;
         ShapeNodeNative01.setGeometry(Cylinder.makeGeometry(32, .2, lengthPendulum));
         nativeObject01.setNode3D(ShapeNodeNative01);
@@ -161,48 +161,159 @@ public class ElectrostaticPendulumSpherical extends SimEM {
         myAppearance.setTransparencyAttributes(new TransparencyAttributes(TransparencyAttributes.NICEST, 0.5f));
 
         // Set charges
-        double pointChargeRadius = 0.9;
+        double fixedCharge = -25.;
+        double fixedRadius =4.;
+        double pointChargeRadius = .9;
 
-        PointCharge chargeNW = new PointCharge();
-        chargeNW.setRadius(pointChargeRadius);
-        //chargeNW.setPauliDistance(4.*pointChargeRadius);
-        chargeNW.setMass(1.0);
-        chargeNW.setCharge(-30.0);
-        chargeNW.setID("chargeNW");
-        chargeNW.setPickable(false);
-        chargeNW.setColliding(false);
-        chargeNW.setGeneratingP(true);
-        chargeNW.setPosition(new Vector3d(0., 0.,3.));
-        chargeNW.setMoveable(false);
-        SphereCollisionController sccx = new SphereCollisionController(chargeNW);
+        PointCharge charge01 = new PointCharge();
+        charge01.setRadius(pointChargeRadius);
+        charge01.setMass(.05);
+        charge01.setCharge(fixedCharge);
+        charge01.setID("charge01");
+        charge01.setPickable(false);
+        charge01.setColliding(false);
+        charge01.setGeneratingP(true);
+        charge01.setPosition(new Vector3d(0., 0.,fixedRadius));
+        charge01.setMoveable(false);
+        SphereCollisionController sccx = new SphereCollisionController(charge01);
         sccx.setRadius(pointChargeRadius);
         sccx.setTolerance(0.1);
         sccx.setMode(SphereCollisionController.WALL_SPHERE);
-        chargeNW.setCollisionController(sccx);
-        addElement(chargeNW);
-
-        PointCharge chargeNE = new PointCharge();
-        chargeNE.setRadius(pointChargeRadius);
-        //chargeNE.setPauliDistance(4.*pointChargeRadius);
-        chargeNE.setMass(1.0);
-        chargeNE.setCharge(-100.0);
-        chargeNE.setID("chargeNW");
-        chargeNE.setPickable(false);
-        chargeNE.setColliding(false);
-        chargeNE.setGeneratingP(true);
-        chargeNE.setPosition(new Vector3d(0., -0., -3.));
-        chargeNE.setMoveable(false);
-        sccx = new SphereCollisionController(chargeNE);
+        charge01.setCollisionController(sccx);
+        addElement(charge01);
+        
+        double delta_angle = 2.*Math.PI/8.;
+        double angle = delta_angle;
+        PointCharge charge02 = new PointCharge();
+        charge02.setRadius(1.0*pointChargeRadius);
+        charge02.setMass(1.0);
+        charge02.setCharge(1.0*fixedCharge);
+        charge02.setID("charge02");
+        charge02.setPickable(false);
+        charge02.setColliding(false);
+        charge02.setGeneratingP(true);
+        charge02.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+        charge02.setMoveable(false);
+        sccx = new SphereCollisionController(charge02);
         sccx.setRadius(pointChargeRadius);
         sccx.setTolerance(0.1);
         sccx.setMode(SphereCollisionController.WALL_SPHERE);
-        chargeNE.setCollisionController(sccx);
-       addElement(chargeNE);
-
+        charge02.setCollisionController(sccx);
+       addElement(charge02);
+       
+       angle = angle+delta_angle;
+       PointCharge charge03 = new PointCharge();
+       charge03.setRadius(pointChargeRadius);
+       charge03.setMass(1.0);
+       charge03.setCharge(fixedCharge);
+       charge03.setID("charge03");
+       charge03.setPickable(false);
+       charge03.setColliding(false);
+       charge03.setGeneratingP(true);
+       charge03.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+       charge03.setMoveable(false);
+       sccx = new SphereCollisionController(charge03);
+       sccx.setRadius(pointChargeRadius);
+       sccx.setTolerance(0.1);
+       sccx.setMode(SphereCollisionController.WALL_SPHERE);
+       charge03.setCollisionController(sccx);
+      addElement(charge03);
+      
+      angle = angle+delta_angle;
+      PointCharge charge04 = new PointCharge();
+      charge04.setRadius(pointChargeRadius);
+      charge04.setMass(1.0);
+      charge04.setCharge(fixedCharge);
+      charge04.setID("charge04");
+      charge04.setPickable(false);
+      charge04.setColliding(false);
+      charge04.setGeneratingP(true);
+      charge04.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+      charge04.setMoveable(false);
+      sccx = new SphereCollisionController(charge04);
+      sccx.setRadius(pointChargeRadius);
+      sccx.setTolerance(0.1);
+      sccx.setMode(SphereCollisionController.WALL_SPHERE);
+      charge04.setCollisionController(sccx);
+     addElement(charge04);
+     
+     angle = angle+delta_angle;
+     PointCharge charge05 = new PointCharge();
+     charge05.setRadius(pointChargeRadius);
+     charge05.setMass(1.0);
+     charge05.setCharge(fixedCharge);
+     charge05.setID("charge05");
+     charge05.setPickable(false);
+     charge05.setColliding(false);
+     charge05.setGeneratingP(true);
+     charge05.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+     charge05.setMoveable(false);
+     sccx = new SphereCollisionController(charge05);
+     sccx.setRadius(pointChargeRadius);
+     sccx.setTolerance(0.1);
+     sccx.setMode(SphereCollisionController.WALL_SPHERE);
+     charge05.setCollisionController(sccx);
+    addElement(charge05);
+    
+    angle = angle+delta_angle;
+    PointCharge charge06 = new PointCharge();
+    charge06.setRadius(pointChargeRadius);
+    charge06.setMass(1.0);
+    charge06.setCharge(fixedCharge);
+    charge06.setID("charge06");
+    charge06.setPickable(false);
+    charge06.setColliding(false);
+    charge06.setGeneratingP(true);
+    charge06.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+    charge06.setMoveable(false);
+    sccx = new SphereCollisionController(charge06);
+    sccx.setRadius(pointChargeRadius);
+    sccx.setTolerance(0.1);
+    sccx.setMode(SphereCollisionController.WALL_SPHERE);
+    charge06.setCollisionController(sccx);
+   addElement(charge06);
+   
+   angle = angle+delta_angle;
+   PointCharge charge07 = new PointCharge();
+   charge07.setRadius(pointChargeRadius);
+   charge07.setMass(1.0);
+   charge07.setCharge(fixedCharge);
+   charge07.setID("charge07");
+   charge07.setPickable(false);
+   charge07.setColliding(false);
+   charge07.setGeneratingP(true);
+   charge07.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+   charge07.setMoveable(false);
+   sccx = new SphereCollisionController(charge07);
+   sccx.setRadius(pointChargeRadius);
+   sccx.setTolerance(0.1);
+   sccx.setMode(SphereCollisionController.WALL_SPHERE);
+   charge07.setCollisionController(sccx);
+  addElement(charge07);
+  
+  
+  angle = angle+delta_angle;
+  PointCharge charge08 = new PointCharge();
+  charge08.setRadius(pointChargeRadius);
+  charge08.setMass(1.0);
+  charge08.setCharge(fixedCharge);
+  charge08.setID("charge08");
+  charge08.setPickable(false);
+  charge08.setColliding(false);
+  charge08.setGeneratingP(true);
+  charge08.setPosition(new Vector3d(fixedRadius*Math.sin(angle), 0., fixedRadius*Math.cos(angle)));
+  charge08.setMoveable(false);
+  sccx = new SphereCollisionController(charge08);
+  sccx.setRadius(pointChargeRadius);
+  sccx.setTolerance(0.1);
+  sccx.setMode(SphereCollisionController.WALL_SPHERE);
+  charge08.setCollisionController(sccx);
+ addElement(charge08);
+   
         playerCharge = new PointCharge();
         playerCharge.setRadius(pointChargeRadius);
         //playerCharge.setPauliDistance(4.*pointChargeRadius);
-        playerCharge.setMass(1.0);
+        playerCharge.setMass(.7);
         playerCharge.setCharge(1);
         playerCharge.setID("playerCharge");
         playerCharge.setPickable(false);
@@ -236,35 +347,87 @@ public class ElectrostaticPendulumSpherical extends SimEM {
             RelativeFLine fl = new RelativeFLine(playerCharge, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
             fl.setType(Field.E_FIELD);
             fl.setKMax(maxStep);
-            fmanager.addFieldLine(fl);
+//            fmanager.addFieldLine(fl);
         }
         }
-        // put field lines on stationary NE charge
+        // put field lines on stationary 01 charge
         
-        numberFLA = 2;
-        numberFLP =2;
+        numberFLA = 3;
+        numberFLP =3;
         for (int k = 0; k < numberFLP+2; k++) {
         for (int j = 0; j < numberFLA; j++) {
-            RelativeFLine fl = new RelativeFLine(chargeNE, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+            RelativeFLine fl = new RelativeFLine(charge01, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
             fl.setType(Field.E_FIELD);
             fl.setKMax(maxStep);
             fmanager.addFieldLine(fl);
         }
        }
         
-      // put field lines on stationary NW charge
+      // put field lines on stationary 02 charge
         
 //        numberFLA = 2;
 //        numberFLP =3;
         for (int k = 0; k < numberFLP+2; k++) {
         for (int j = 0; j < numberFLA; j++) {
-            RelativeFLine fl = new RelativeFLine(chargeNW, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+            RelativeFLine fl = new RelativeFLine(charge02, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
             fl.setType(Field.E_FIELD);
             fl.setKMax(maxStep);
             fmanager.addFieldLine(fl);
-        }
+        }       
+        } 
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge03, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
        }
         
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge04, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
+       }
+            
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge05, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
+       }
+            
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge06, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
+       }
+            
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge07, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
+       }
+            
+            for (int k = 0; k < numberFLP+2; k++) {
+                for (int j = 0; j < numberFLA; j++) {
+                    RelativeFLine fl = new RelativeFLine(charge08, ((j + 1) / (numberFLA*1.)) * Math.PI * 2.,((k ) / (numberFLP*1.+1.)) * Math.PI ,startFL);
+                    fl.setType(Field.E_FIELD);
+                    fl.setKMax(maxStep);
+                    fmanager.addFieldLine(fl);
+                }
+       }
         fmanager.setSymmetryCount(2);
         theEngine.setBoundingArea(new BoundingSphere(new Point3d(), 12));
 
@@ -276,7 +439,7 @@ public class ElectrostaticPendulumSpherical extends SimEM {
         chargeSlider.setBounds(40, 535, 415, 50);
         chargeSlider.setPaintTicks(true);
         chargeSlider.addRoute(playerCharge, "charge");
-        chargeSlider.setValue(-3);
+        chargeSlider.setValue(0);
         //addElement(chargeSlider);
         chargeSlider.setVisible(true);
         label = new JLabel("Current Time:");
@@ -422,6 +585,7 @@ public class ElectrostaticPendulumSpherical extends SimEM {
  //               double distance = temp.length();
  //        		System.out.println("    ");
  //        		System.out.println("Spherical Electrostatic Pendulum   time   " + time + " distance " + distance + " x pos " + cali.x + " y pos " + cali.y + " z pos "+ cali.z);
+ 
                  score.setText(String.valueOf(time));
                 score.setText(String.valueOf(time));
                 if (actionEnabled) {

@@ -88,6 +88,13 @@ public class RelativeFLine extends FieldLine implements HasReference {
         setPickable(false);
         setOffset(radius,angle);
     }
+    
+    public RelativeFLine(Referenced obj, double angleA, double radius) {
+        this(obj);
+//		System.out.println(" angleA " + angleA + " angleP " + angleP +" radius  " + radius  );
+        setOffset(radius,angleA);
+    }
+
 
     public RelativeFLine(Referenced obj, double angleA, double angleP, double radius) {
         this(obj);
