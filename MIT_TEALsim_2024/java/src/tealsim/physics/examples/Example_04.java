@@ -38,7 +38,7 @@ public class Example_04 extends SimEM {
     /** The radius of the sphere representing the floating charge.  */
     double floatingChargeRadius = 0.2;
     /** The friction in the world. */
-    double friction = 1.;
+    double friction = 0.;
     /** The floating charge.  */
     PointCharge floatingCharge;
     /** The fixed charge.  */
