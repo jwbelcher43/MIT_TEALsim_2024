@@ -1,3 +1,4 @@
+
 /* $Id: Example_04.java,v 1.2 2008/01/06 21:42:59 jbelcher Exp $ */
 /**
  * @author John Belcher 
@@ -38,7 +39,7 @@ public class Example_04 extends SimEM {
     /** The radius of the sphere representing the floating charge.  */
     double floatingChargeRadius = 0.2;
     /** The friction in the world. */
-    double friction = 0.;
+    double friction = 1.;
     /** The floating charge.  */
     PointCharge floatingCharge;
     /** The fixed charge.  */

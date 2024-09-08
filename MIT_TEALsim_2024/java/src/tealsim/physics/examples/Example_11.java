@@ -1,162 +1,151 @@
-/* $Id: Example_09.java,v 1.2 2008/01/17 14:46:26 jbelcher Exp $ */
+/* $Id: Example_04.java,v 1.2 2008/01/06 21:42:59 jbelcher Exp $ */
 /**
  * @author John Belcher 
  * Revision: 1.0 $
  */
 
 package tealsim.physics.examples;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import javax.media.j3d.*;
 import javax.vecmath.*;
+
 import teal.framework.TFramework;
 import teal.framework.TealAction;
-import teal.plot.PlotProperties;
-import teal.plot.Graph;
-import teal.sim.collision.SphereCollisionController;
-import teal.physics.physical.PhysicalObject;
-import teal.physics.physical.Wall;
 import teal.physics.em.MagneticDipole;
-import teal.physics.em.RingOfCurrent;
 import teal.physics.em.SimEM;
 import teal.ui.control.*;
 import teal.util.TDebug;
-import teal.sim.spatial.*;
+import teal.sim.spatial.FieldConvolution;
+import teal.visualization.dlic.DLIC;
+import teal.math.RectangularPlane;
+import java.awt.Dimension;
+
+import teal.sim.collision.SphereCollisionController;
 import teal.sim.control.VisualizationControl;
+
+
+/** A simulation of a free magnet falling under gravity and also interacting magnetostatically with
+ * a fixed magnet located underneath a wall.  We have a slider that can be used to vary the dipole moment
+ * on the fixed magnet.  The friction in the world is set to a high value so that the falling magnet
+ * will quickly settle down to its equilibrium position.
+ *  
+ * @author John Belcher
+ * @version 1.0 
+ * */
 
 public class Example_11 extends SimEM {
 
     private static final long serialVersionUID = 3257008735204554035L;
-    
-    PropertyDouble currentSlider = new PropertyDouble();
-    RingOfCurrent floatingCoil;
-    Vector3d floatingCoilPos;
-    MagneticDipole magDipole;
-	Graph position_graph;
-	PlotProperties position_plot;
-    double ringRad = 0.43;
-    double torR = 0.08;
-    double ringMass = 3.5;
-    double current = -50.;
-    double magLen = 0.24;
-    double magR = 0.09;
-    double searchRad = magR;
-    double fLen = 0.033;
-    double minD = 0.03;
-    int kMax = 300; //300
-    double friction = 10.;
-	private FieldLineManager fmanager;
-    private FieldLine fl = null;
-    int fMode = FieldLine.RUNGE_KUTTA;
+    /** The fixed-in-space magnetic dipole moment slider. */
+    PropertyDouble MagMomentSlider = new PropertyDouble();
+    /** The radius of the cylinder representing the fixed-in-space magnet. */
+    double fixedMagnetRad = 0.2;
+    /** The length of the cylinder representing the fixed-in-space magnet. */
+    double fixedMagnetLen = 0.2;
+    /** The radius of the cylinder representing the floating magnet.  */
+    double floatingMagnetRadius = 0.2;
+    /** The length of the cylinder representing the floating magnet. */
+    double floatngMagnetLen = 0.2;
+    /** The friction in the world. */
+    double friction = 0;
+    /** The floating magnet.  */
+    MagneticDipole floatingMagnet;
+    /** The fixed magnet.  */
+    MagneticDipole fixedMagnet;
+    /** The initial vector position of the floating magnet.  */
+    Vector3d floatingMagnetPos;
+    /** The mass of both the floating and the fixed magnet. */
+    double magnetMass = 0.035;
+    /** The dipole moment of the fixed magnet. */
+    double MuFixed = 1.;
+    /** The dipole moment of the floating magnet. */
+    double MuFloat = 1.;
  
     public Example_11() {
         super();
 
         TDebug.setGlobalLevel(0);
 
-        title = "Example_09";
+        title = "Example_11";
         
 		///// Set properties on the SimEngine /////
 		// Bounding area represents the characteristic size of the space.
 		// setDeltaTime() sets the time step of the simulation.
 		// setDamping() sets the damping on the system.
-       
+        
         BoundingSphere bs = new BoundingSphere(new Point3d(0, 1.6, 0), 03.5);
         theEngine.setBoundingArea(bs);
-        theEngine.setDeltaTime(0.05); 
+        theEngine.setDeltaTime(0.02); 
         theEngine.setDamping(friction);  
+        theEngine.setGravity(new Vector3d(0.,0.,0.));
         mViewer.setBoundingArea(bs);
               
-        magDipole = new MagneticDipole();
-        magDipole.setMu(10.);
-        magDipole.setPosition(new Vector3d(0., 0., 0.));
-        magDipole.setDirection(new Vector3d(0, 1, 0));
-        magDipole.setPickable(false);
-        magDipole.setRotable(false);
-        magDipole.setMoveable(false);
-        magDipole.setRadius(magR);
-        magDipole.setLength(magLen);
-        addElement(magDipole);
+        fixedMagnet = new MagneticDipole();
+        fixedMagnet.setMu(MuFixed);
+        fixedMagnet.setPosition(new Vector3d(0., -0.8, 0.));
+        fixedMagnet.setDirection(new Vector3d(0, -1, 0));
+        fixedMagnet.setPickable(false);
+        fixedMagnet.setRotable(false);
+        fixedMagnet.setMoveable(false);
+        fixedMagnet.setRadius(fixedMagnetRad);
+        fixedMagnet.setLength(fixedMagnetLen);
+        fixedMagnet.setMass(magnetMass);
+        SphereCollisionController sccx = new SphereCollisionController(fixedMagnet);
+        sccx.setRadius(0.6);
+        sccx.setTolerance(0.1);
+        //		sccx.setElasticity(0.);
+        //		sccx.setMode(SphereCollisionController.WALL_SPHERE);
+        fixedMagnet
+        .setCollisionController(sccx);
+        addElement(fixedMagnet);
 
-        floatingCoil = new RingOfCurrent();
-        floatingCoil.setID("Ring");
-        floatingCoil.setDirection(new Vector3d(0., 1., 0.));
-        floatingCoil.setPickable(true);
-        floatingCoil.setRotable(true);
-        floatingCoil.setMoveable(true);
-        floatingCoil.setInducing(false);
-        floatingCoil.setRadius(ringRad);
-        floatingCoil.setTorusRadius(torR);
-        floatingCoil.setMass(ringMass);
-        floatingCoil.setInducing(false);
-        floatingCoil.setCurrent(current);
-		// Here we add a collisionController to the RingOfCurrent 
-        //so that it will be registered as a colliding object, and
-		// react appropriately when it touches the Wall.  
-        SphereCollisionController sccx = 
-        	new SphereCollisionController(floatingCoil);
-        sccx.setRadius(torR);
-        sccx.setTolerance(0.01);
-        floatingCoil.setColliding(true);
-        floatingCoil.setCollisionController(sccx); 
-        floatingCoilPos = new Vector3d(0., 
-        		1.25+ ringRad + (ringRad * 0.02), 0.);
-        addElement(floatingCoil);
+        floatingMagnet = new MagneticDipole();
+        floatingMagnet.setID("Magnet");
+        floatingMagnet.setMu(MuFloat);
+        floatingMagnet.setDirection(new Vector3d(0., 1., 0.));
+        floatingMagnetPos = new Vector3d(0., 1.25, 0.);
+        floatingMagnet.setPickable(true);
+        floatingMagnet.setRotable(true);
+        floatingMagnet.setMoveable(true);
+        floatingMagnet.setRadius(floatingMagnetRadius);
+        floatingMagnet.setLength(floatngMagnetLen);
+        floatingMagnet.setMass(magnetMass);
+        addElement(floatingMagnet);
       
-        // We create a wall that the floating coil sits on.
-		// Wall constructor.  		
-        Wall wall = new Wall(new Vector3d(0., 0, 0.), 
-        		new Vector3d(2., 0., 0.), new Vector3d(0., 0., 2.));
-        wall.setElasticity(1.);
-        addElement(wall);   
         
-        // create the sliders to control the amount of current
+        // create the sliders to control the dipole moment
         
-        currentSlider.setText("I");
-        currentSlider.setMinimum(-100);
-        currentSlider.setMaximum(100);
-        currentSlider.setPaintTicks(true);
-        currentSlider.addPropertyChangeListener("value", this);
-        currentSlider.setValue(current);
-        currentSlider.setVisible(true);
+        MagMomentSlider.setText("Mufixed");
+        MagMomentSlider.setMinimum(-10);
+        MagMomentSlider.setMaximum(10);
+        MagMomentSlider.setPaintTicks(true);
+        MagMomentSlider.addPropertyChangeListener("value", this);
+        MagMomentSlider.setValue(1.);
+        MagMomentSlider.setVisible(true);
 
         // add the slider to a control group and add
 
         ControlGroup controls = new ControlGroup();
         controls.setText("Parameters");
-        controls.add(currentSlider);
+        controls.add(MagMomentSlider);
         addElement(controls);
-
-	    // add field lines	
-		
-	    fmanager = new FieldLineManager();       
-        fl = makeFLine(-200.0, floatingCoil, null, fLen, kMax, fMode);
-        fmanager.addFieldLine(fl);
         
-        fl = makeFLine(-1000.0, floatingCoil, null, fLen, kMax, fMode);
-        fmanager.addFieldLine(fl);
-        
-        fl = makeFLine(220.0, floatingCoil, null, fLen, kMax, fMode);
-        fmanager.addFieldLine(fl);
-        
-        fl = makeFLine(120.0, floatingCoil, null, fLen, kMax, fMode);
-        fmanager.addFieldLine(fl);
-
-        fl = makeFLine(120.0, magDipole, null, fLen, kMax, fMode);  // was 120
-        fl.setBuildDir(FieldLine.BUILD_NEGATIVE);
-        fmanager.addFieldLine(fl);
-
-        fl = makeFLine(220.0, magDipole, null, fLen, kMax, fMode);    // was 220
-        fl.setBuildDir(FieldLine.BUILD_NEGATIVE);
-        fmanager.addFieldLine(fl);
-        
-	    fmanager.setElementManager(this);
-	    
+        // Add a FieldConvolution generator to the simulation.  
+        // A FieldConvolution generates high-resolution 
+		// images of a two-dimensional slice of the field.  
+        // Below we create the generator and specify the size of the slice.
+        RectangularPlane rec = new RectangularPlane(new Vector3d(-2.5, -2.5, 0.),
+				new Vector3d(-2.5, 2.5, 0.), new Vector3d(2.5, 2.5, 0.));
+		FieldConvolution mDLIC = new FieldConvolution();
+		mDLIC.setSize(new Dimension(1024, 1024));
+		mDLIC.setVisible(false);
+		mDLIC.setComputePlane(rec);
         VisualizationControl vis = new VisualizationControl();
-        vis.setFieldLineManager(fmanager);
+        vis.setFieldConvolution(mDLIC);
+		vis.setConvolutionModes(DLIC.DLIC_FLAG_B | DLIC.DLIC_FLAG_BP);
         addElement(vis);
-        
+		
         // set paramters for mouseScale 
         
         Vector3d mouseScale = mViewer.getVpTranslateScale();
@@ -164,7 +153,6 @@ public class Example_11 extends SimEM {
         mouseScale.y *= 0.05;
         mouseScale.z *= 0.5;
         mViewer.setVpTranslateScale(mouseScale);
-
         mSEC.init(); 
         resetCamera();
         // addAction for pulldown menus on TEALsim windows     
@@ -177,15 +165,15 @@ public class Example_11 extends SimEM {
     void addActions() {
         TealAction ta = new TealAction("Execution & View", this);
         addAction("Help", ta);
-        TealAction tb = new TealAction("Example_06", this);
+        TealAction tb = new TealAction("Example_04", this);
         addAction("Help", tb);
     }
 
     public void actionPerformed(ActionEvent e) {
         TDebug.println(1, " Action comamnd: " + e.getActionCommand());
-        if (e.getActionCommand().compareToIgnoreCase("Example_06") == 0) {
+        if (e.getActionCommand().compareToIgnoreCase("Example_04") == 0) {
         	if(mFramework instanceof TFramework) {
-        		((TFramework)mFramework).openBrowser("help/example_06.html");
+        		((TFramework)mFramework).openBrowser("help/example_04.html");
         	}
         }  else {
             super.actionPerformed(e);
@@ -198,15 +186,14 @@ public class Example_11 extends SimEM {
         }  else {
             super.actionPerformed(e);
         }
-        
     }
 
     public void reset() {
-        floatingCoil.setPosition(floatingCoilPos);
-        floatingCoil.setVelocity(new Vector3d());
-        floatingCoil.setDirection(new Vector3d(0., 1., 0.));
+        floatingMagnet.setPosition(floatingMagnetPos);
+        floatingMagnet.setVelocity(new Vector3d(0.,0.,0.));
+        floatingMagnet.setDirection(new Vector3d(0., 1., 0.));
         theEngine.setDamping(friction);
-        currentSlider.setValue(current);
+        MagMomentSlider.setValue(1.);
 		theEngine.requestRefresh();
     }
 
@@ -217,42 +204,13 @@ public class Example_11 extends SimEM {
 
     public void propertyChange(PropertyChangeEvent pce) {
         Object source = pce.getSource();
-        if (source == currentSlider) {
-            current = ((Double) pce.getNewValue()).doubleValue();
-            floatingCoil.setCurrent(current);   
+        if (source == MagMomentSlider) {
+            MuFixed = ((Double) pce.getNewValue()).doubleValue();
+            fixedMagnet.setMu(MuFixed);   
         } else {
             super.propertyChange(pce);
         }
-        
     }
-    protected FieldLine makeFLine(double val, PhysicalObject obj, Color color, 
-    		double fLen, int kMax, int fMode) {
-        Color col = color;
-        Vector3d start = new Vector3d(0, 0, 0);
-        Vector3d positive = new Vector3d(1, 0, 0);
-        FluxFieldLine fl;
-        if (obj == null) {
-            fl = new FluxFieldLine(val, start, positive, searchRad);
-        } else {
-            if (obj instanceof RingOfCurrent) {
-                fl = new FluxFieldLine(val, obj, true, true);
-            } else if (obj instanceof MagneticDipole) {
-                fl = new FluxFieldLine(val, obj, true, false);
-                fl.setObjRadius(searchRad);
-            } else {
-                return null;
-            }
-        }
-        fl.setMinDistance(minD * 0.5);
-        fl.setIntegrationMode(fMode);
-        fl.setKMax(kMax);
-        fl.setSArc(fLen);
-        fl.setColorMode(FieldLine.COLOR_VERTEX);
-        fl.setReceivingFog(true);
-        if (col != null) {
-            fl.setColor(col);
-        }
-        return fl;
-    }
+    
 }
 

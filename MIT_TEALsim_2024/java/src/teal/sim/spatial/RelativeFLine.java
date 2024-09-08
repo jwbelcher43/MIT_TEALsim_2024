@@ -78,9 +78,10 @@ public class RelativeFLine extends FieldLine implements HasReference {
 
     public RelativeFLine(Referenced obj, double angle) {
         this(obj);
-//		System.out.println(" angle " + angle + " angle  " + angle + " angle  " + angle );
         setOffset(angle);
     }
+    
+    
     
     // added these to set the radius at which the fieldlines are drawn
     public RelativeFLine(Vector3d pos, double angle, double radius) {
@@ -88,17 +89,15 @@ public class RelativeFLine extends FieldLine implements HasReference {
         setPickable(false);
         setOffset(radius,angle);
     }
-    
-    public RelativeFLine(Referenced obj, double angleA, double radius) {
-        this(obj);
-//		System.out.println(" angleA " + angleA + " angleP " + angleP +" radius  " + radius  );
-        setOffset(radius,angleA);
-    }
 
+    public RelativeFLine(Referenced obj, double angle, double radius) {
+        this(obj);
+        setOffset(radius,angle);
+    }
+    
 
     public RelativeFLine(Referenced obj, double angleA, double angleP, double radius) {
         this(obj);
-//		System.out.println(" angleA " + angleA + " angleP " + angleP +" radius  " + radius  );
         setOffset(radius,angleA,angleP);
     }
 
@@ -110,6 +109,8 @@ public class RelativeFLine extends FieldLine implements HasReference {
     public RelativeFLine(Referenced obj, double angle, Field fld) {
         this(obj, angle);
         field = fld;
+        
+        
     }
 
     /**
@@ -181,10 +182,7 @@ public class RelativeFLine extends FieldLine implements HasReference {
     	double r = 0;
         if (mElement != null) {
             BoundingSphere bs = new BoundingSphere(((EngineRendered) mElement).getBoundingArea());
-            //r = 2.0 * bs.getRadius();
-
-            r = bs.getRadius()/2.;
-//    		System.out.println(" r " + r + "   " + r + "   " + r );
+            r = bs.getRadius();
         }
         setOffset(r, radians);
     }
@@ -202,6 +200,7 @@ public class RelativeFLine extends FieldLine implements HasReference {
         offset = sp;
         position = sp;
     }
+    
     public void setOffset(double r, double radiansA, double radiansP) {
         Vector3d sp = new Vector3d();
         sp.x += (r * Math.cos(radiansA)*Math.sin(radiansP));
@@ -216,6 +215,8 @@ public class RelativeFLine extends FieldLine implements HasReference {
         offset = sp;
         position = sp;
     }
+    
+
     public void setOffset(Vector3d off) {
         offset = off;
         if (mElement != null) {
