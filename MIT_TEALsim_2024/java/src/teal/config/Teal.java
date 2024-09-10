@@ -135,6 +135,7 @@ public class Teal {
     public static final double RingOfCurrentDefaultResistance = 1;
     public static final double RingOfCurrentDefaultTorusRadius = 0.1;
     public static final double RingOfCurrentDefaultRadius = 0.6;
+    public static final double CylindricalBarMagnetDefaultRadius = 0.2;
     public static final Vector3d RingOfCurrentDefaultMoment = new Vector3d(0, 1, 0);
 
     public static final int MaxConductorNumberOfCharges = 50;

@@ -16,6 +16,7 @@ import javax.vecmath.*;
 
 import teal.config.Teal;
 import teal.core.TUpdatable;
+import teal.math.SpecialFunctions;
 import teal.render.HasRotation;
 import teal.render.j3d.MagDipoleNode3D;
 import teal.render.scene.TNode3D;
@@ -26,17 +27,18 @@ import teal.util.*;
  * <a href="C:\Development\Projects\generalDoc\TEAL_Physics_Math.pdf"> 
  * TEAL Physics and Mathematics</a> documentation.  
  */
-public class MagneticDipole extends Dipole {
+public class CylindricalBarMagnet extends Dipole {
 
     private static final long serialVersionUID = 3257290227361068337L;
-    
+    protected double CEIaccuracy = 0.0002;  // default accuracy for elliptic Integral computation
+    protected transient double radius_d = Teal.CylindricalBarMagnetDefaultRadius;
     protected double mu;
 	protected transient double mu_d;
     protected boolean feelsBField = true;
     protected boolean avoid_singularity = false;
     protected double avoid_singularity_scale = 1;
 	protected double pauliDistance = -1.;
-    public MagneticDipole() {
+    public CylindricalBarMagnet() {
         super();
         generatingBField = true;
         radius = Teal.MagnetRadius;
@@ -149,37 +151,114 @@ public class MagneticDipole extends Dipole {
         return T;
     }
 
-    public Vector3d getB(Vector3d pos) {
-        Vector3d B = new Vector3d();
-        Vector3d n = new Vector3d();
-        Vector3d m = new Vector3d(getDipoleMoment());
-        n.sub(pos, position_d);
-        double r = n.length();
-        double tiny1 = avoid_singularity_scale * 1e-1;
-        double tiny2 = avoid_singularity_scale * 1e-2;
-        Vector3d direction = new Vector3d(m);
-        direction.normalize();
-        double depth = Math.abs(n.dot(direction));
-
-        if (r < tiny1 && depth < tiny2 && avoid_singularity) {
-            double a = Math.sqrt(r * r - depth * depth);
-            double area = Math.PI * a * a;
-            B.set(m);
-            B.scale(2. / a);
-            B.scale(1. / area);
-        } else {
-            n.normalize();
-            n.scale(3. * m.dot(n));
-            B.add(n);
-            B.sub(m);
-            B.scale(1. / (r * r * r));
-            B.scale(Teal.PermitivityVacuumOver4Pi);
-        }
-        return B;
-    }
-
+    /**
+     * Evaluates the magnetic field at the given position and time.
+     * 
+     * @see #getB(Vector3d)
+     * @param pos Position to evaluate the magnetic field at.
+     * @param t Time to evaluate the magnetic field at.
+     * @return Magnetic field value at the given position and time.
+     */
     public Vector3d getB(Vector3d pos, double t) {
         return getB(pos);
+    }
+
+    /**
+     * Evaluates the magnetic field at the given position. If the point of
+     * evaluation is on-axis, a closed form expression is used. Otherwise, the
+     * <code>ellipticalIntegral</code> method is used for the evaluation.   
+     * See Section 3.2 of the 
+     * <a href="C:\Development\Projects\generalDoc\TEAL_Physics_Math.pdf"> 
+     * TEAL Physics and Mathematics</a> documentation. 
+     * 
+     * @see teal.math.SpecialFunctions#ellipticIntegral(double, double, double, double, double)
+     * @param point Position to evaluate the magnetic field at.
+     * @return Magnetic field value at the given position.
+     */
+    public Vector3d getB(Vector3d point) {
+
+        // If the dipole moment of the ring is zero, we return a zero vector for B.
+        Vector3d dipoleMoment = new Vector3d(getDipoleMoment());
+        if (dipoleMoment.length() <= Teal.DoubleZero) {
+            return new Vector3d();
+        }
+
+        // Variable declarations.
+        // *********************************************************************
+        Vector3d value = null;
+        Vector3d temp = new Vector3d();
+        Vector3d zprime = new Vector3d();
+        Vector3d xprime = new Vector3d();
+        Vector3d R = new Vector3d();
+        double f, Zprime, Xprime, Zprime_norm, Xprime_norm, Zprime_norm2, BR, BZ;
+        double r12, ks, kc, k, h, L1, L2, G0, G1;
+
+        // Computations.
+        // *********************************************************************
+
+        // Construct dipole centered coordinate system x'y'z' with z' axis along
+        // the ring normal dipole axis M and the x'-axis perpendicular to that
+        // vector and in the plane of X and M. The B-field of the ring will have
+        // only x' and z' components. Zprime and Rprime are the coordinates of
+        // the observation point as seen in this prime coordinate system, as
+        // seen from the center of the ring.
+
+        R.sub(position_d, point);
+        zprime.set(dipoleMoment);
+        zprime.normalize();
+        Zprime = zprime.dot(R);
+        xprime.set(R);
+        temp.set(zprime);
+        temp.scale(Zprime);
+        xprime.sub(temp);
+
+        // On-axis computation.
+        // *********************************************************************
+        if (xprime.length() < Teal.DoubleZero) {
+            double dK = (R.length() * R.length()) + (radius_d * radius_d);
+            dK = Math.pow(dK, 1.5);
+            dK = 1. / dK;
+            dipoleMoment.scale(2.*dK *Teal.PermitivityVacuumOver4Pi);
+            value = dipoleMoment;
+            return value;
+        }
+
+        // Off-axis computation by elliptic integration.
+        // *********************************************************************
+        xprime.normalize();
+        Xprime = xprime.dot(R);
+
+        //  Normalize lengths to radius of ring
+        Zprime_norm = Zprime / radius_d;
+        Xprime_norm = Xprime / radius_d;
+        Zprime_norm2 = Zprime_norm * Zprime_norm;
+
+        r12 = Zprime_norm2 + (Xprime_norm + 1.) * (Xprime_norm + 1.);
+        ks = (Zprime_norm2 + (Xprime_norm - 1.) * (Xprime_norm - 1.)) / r12;
+        kc = Math.sqrt(ks);
+        k = Math.sqrt(1. - ks);
+        h = 1. + ks - (1. - ks) * Xprime_norm;
+        G0 = SpecialFunctions.ellipticIntegral(kc, 1., -1., 1.,CEIaccuracy);
+        G1 = .5 * SpecialFunctions.ellipticIntegral(kc, ks, -1., 1.,CEIaccuracy);
+        L1 = (G0 + h * G1) * k / Math.pow(Xprime_norm, 1.5);
+        L2 = Zprime_norm * G1 * k * k * k / Math.pow(Xprime_norm, 1.5);
+        f = dipoleMoment.length() / (Math.PI * Math.pow(radius_d, 3.));
+        BR = f * L2;
+        BZ = f * L1;
+
+        //  We have found the vector field components in our dipole centered
+        //  coordinate system. Now we reconstruct the total vector field in xyz.
+        
+        value = new Vector3d();
+        Vector3d repBR = new Vector3d(xprime);
+        Vector3d repBZ = new Vector3d(zprime);
+        repBR.scale(BR);
+        repBZ.scale(BZ);
+        value.add(repBR);
+        value.add(repBZ);
+        value.scale(Teal.PermitivityVacuumOver4Pi);
+
+        return value;
     }
 
     /**

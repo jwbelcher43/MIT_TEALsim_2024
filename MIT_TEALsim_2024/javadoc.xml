@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="java/lib/j3d/1.5.2/vecmath.jar;java/lib/j3d/1.5.2/j3dcore.jar;java/lib/j3d/1.5.2/j3dutils.jar" destdir="doc" doctitle="TEALsimJavaDoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.8" sourcefiles="java/src/teal/util/TDebug.java" sourcepath="java/src" splitindex="true" use="true" version="true">
+            <link href="https://docs.oracle.com/javase/8/docs/api/"/>
+            <link href="http://docs.oracle.com/javase/8/javafx/api/"/>
+        </javadoc>
+    </target>
+</project>

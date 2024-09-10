@@ -38,7 +38,7 @@ import teal.sim.engine.TEngine;
 import teal.physics.em.SimEM;
 import teal.physics.em.EMEngine;
 import teal.physics.physical.Wall;
-import teal.physics.em.MagneticDipole;
+import teal.physics.em.PointCharge;
 import teal.sim.properties.IsSpatial;
 import teal.sim.simulation.SimWorld;
 import teal.sim.spatial.FieldConvolution;
@@ -74,7 +74,7 @@ import teal.util.TDebug;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class MagneticDipolePendulumSpherical extends SimEM {
+public class MagneticPendulumSpherical extends SimEM {
 
     private static final long serialVersionUID = 3256443586278208051L;
     
@@ -92,7 +92,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
     JLabel label;
     JLabel score;
     double minScore = 100000000.;
-    MagneticDipole playerCharge;
+    PointCharge playerCharge;
     Watcher watch;
     double wallscale = 2.0;
     double wheight = 3.0;
@@ -103,7 +103,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
     protected FieldConvolution mDLIC = null;
     FieldLineManager fmanager = null;
 
-    public MagneticDipolePendulumSpherical() {
+    public MagneticPendulumSpherical() {
 
         super();
         title = "Electrostatic Spherical Pendulum";
@@ -165,7 +165,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
         double fixedRadius =4.;
         double pointChargeRadius = .9;
 
-        MagneticDipole charge01 = new MagneticDipole();
+        PointCharge charge01 = new PointCharge();
         charge01.setRadius(pointChargeRadius);
         charge01.setMass(.05);
         charge01.setCharge(fixedCharge);
@@ -184,7 +184,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
         
         double delta_angle = 2.*Math.PI/8.;
         double angle = delta_angle;
-        MagneticDipole charge02 = new MagneticDipole();
+        PointCharge charge02 = new PointCharge();
         charge02.setRadius(1.50*pointChargeRadius);
         charge02.setMass(1.0);
         charge02.setCharge(-3.0*fixedCharge);
@@ -202,7 +202,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
        addElement(charge02);
        
        angle = angle+delta_angle;
-       MagneticDipole charge03 = new MagneticDipole();
+       PointCharge charge03 = new PointCharge();
        charge03.setRadius(pointChargeRadius);
        charge03.setMass(1.0);
        charge03.setCharge(fixedCharge);
@@ -220,7 +220,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
       addElement(charge03);
       
       angle = angle+delta_angle;
-      MagneticDipole charge04 = new MagneticDipole();
+      PointCharge charge04 = new PointCharge();
       charge04.setRadius(pointChargeRadius);
       charge04.setMass(1.0);
       charge04.setCharge(fixedCharge);
@@ -238,7 +238,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
      addElement(charge04);
      
      angle = angle+delta_angle;
-     MagneticDipole charge05 = new MagneticDipole();
+     PointCharge charge05 = new PointCharge();
      charge05.setRadius(pointChargeRadius);
      charge05.setMass(1.0);
      charge05.setCharge(fixedCharge);
@@ -256,7 +256,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
     addElement(charge05);
     
     angle = angle+delta_angle;
-    MagneticDipole charge06 = new MagneticDipole();
+    PointCharge charge06 = new PointCharge();
     charge06.setRadius(1.3*pointChargeRadius);
     charge06.setMass(1.0);
     charge06.setCharge(-2.*fixedCharge);
@@ -274,7 +274,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
    addElement(charge06);
    
    angle = angle+delta_angle;
-   MagneticDipole charge07 = new MagneticDipole();
+   PointCharge charge07 = new PointCharge();
    charge07.setRadius(pointChargeRadius);
    charge07.setMass(1.0);
    charge07.setCharge(fixedCharge);
@@ -293,7 +293,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
   
   
   angle = angle+delta_angle;
-  MagneticDipole charge08 = new MagneticDipole();
+  PointCharge charge08 = new PointCharge();
   charge08.setRadius(pointChargeRadius);
   charge08.setMass(1.0);
   charge08.setCharge(fixedCharge);
@@ -310,7 +310,7 @@ public class MagneticDipolePendulumSpherical extends SimEM {
   charge08.setCollisionController(sccx);
  addElement(charge08);
    
-        playerCharge = new MagneticDipole();
+        playerCharge = new PointCharge();
         playerCharge.setRadius(pointChargeRadius);
         //playerCharge.setPauliDistance(4.*pointChargeRadius);
         playerCharge.setMass(.7);
@@ -530,12 +530,12 @@ public class MagneticDipolePendulumSpherical extends SimEM {
     public void reset(double heightSupport, double lengthPendulum) {
         mSEC.stop();
         mSEC.reset();
-        resetMagneticDipoles(heightSupport,lengthPendulum);
+        resetPointCharges(heightSupport,lengthPendulum);
         //theEngine.requestRefresh();
         watch.setActionEnabled(true);
     }
 
-    private void resetMagneticDipoles(double heightSupport, double lengthPendulum) {
+    private void resetPointCharges(double heightSupport, double lengthPendulum) {
 
         playerCharge.setPosition(new Vector3d(-lengthPendulum, heightSupport, 0));
     }

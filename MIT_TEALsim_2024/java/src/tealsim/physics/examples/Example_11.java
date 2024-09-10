@@ -12,7 +12,7 @@ import javax.vecmath.*;
 
 import teal.framework.TFramework;
 import teal.framework.TealAction;
-import teal.physics.em.MagneticDipole;
+import teal.physics.em.CylindricalBarMagnet;
 import teal.physics.em.SimEM;
 import teal.ui.control.*;
 import teal.util.TDebug;
@@ -42,17 +42,17 @@ public class Example_11 extends SimEM {
     /** The radius of the cylinder representing the fixed-in-space magnet. */
     double fixedMagnetRad = 0.2;
     /** The length of the cylinder representing the fixed-in-space magnet. */
-    double fixedMagnetLen = 0.2;
+    double fixedMagnetLen = 0.1;
     /** The radius of the cylinder representing the floating magnet.  */
     double floatingMagnetRadius = 0.2;
     /** The length of the cylinder representing the floating magnet. */
-    double floatngMagnetLen = 0.2;
+    double floatngMagnetLen = 0.1;
     /** The friction in the world. */
-    double friction = 0;
+    double friction = 0.1;
     /** The floating magnet.  */
-    MagneticDipole floatingMagnet;
+    CylindricalBarMagnet floatingMagnet;
     /** The fixed magnet.  */
-    MagneticDipole fixedMagnet;
+    CylindricalBarMagnet fixedMagnet;
     /** The initial vector position of the floating magnet.  */
     Vector3d floatingMagnetPos;
     /** The mass of both the floating and the fixed magnet. */
@@ -76,31 +76,32 @@ public class Example_11 extends SimEM {
         
         BoundingSphere bs = new BoundingSphere(new Point3d(0, 1.6, 0), 03.5);
         theEngine.setBoundingArea(bs);
-        theEngine.setDeltaTime(0.02); 
-        theEngine.setDamping(friction);  
+        theEngine.setDeltaTime(.01); 
+        theEngine.setDamping(friction
+        		);  
         theEngine.setGravity(new Vector3d(0.,0.,0.));
         mViewer.setBoundingArea(bs);
               
-        fixedMagnet = new MagneticDipole();
+        fixedMagnet = new CylindricalBarMagnet();
         fixedMagnet.setMu(MuFixed);
         fixedMagnet.setPosition(new Vector3d(0., -0.8, 0.));
         fixedMagnet.setDirection(new Vector3d(0, -1, 0));
-        fixedMagnet.setPickable(false);
-        fixedMagnet.setRotable(false);
-        fixedMagnet.setMoveable(false);
+        fixedMagnet.setPickable(true);
+        fixedMagnet.setRotable(true);
+        fixedMagnet.setMoveable(true);
         fixedMagnet.setRadius(fixedMagnetRad);
         fixedMagnet.setLength(fixedMagnetLen);
         fixedMagnet.setMass(magnetMass);
         SphereCollisionController sccx = new SphereCollisionController(fixedMagnet);
-        sccx.setRadius(0.6);
+        sccx.setRadius(0.2);
         sccx.setTolerance(0.1);
+        fixedMagnet.setPauliDistance(1.2);
         //		sccx.setElasticity(0.);
         //		sccx.setMode(SphereCollisionController.WALL_SPHERE);
-        fixedMagnet
-        .setCollisionController(sccx);
+        fixedMagnet.setCollisionController(sccx);
         addElement(fixedMagnet);
 
-        floatingMagnet = new MagneticDipole();
+        floatingMagnet = new CylindricalBarMagnet();
         floatingMagnet.setID("Magnet");
         floatingMagnet.setMu(MuFloat);
         floatingMagnet.setDirection(new Vector3d(0., 1., 0.));
@@ -111,6 +112,10 @@ public class Example_11 extends SimEM {
         floatingMagnet.setRadius(floatingMagnetRadius);
         floatingMagnet.setLength(floatngMagnetLen);
         floatingMagnet.setMass(magnetMass);
+        floatingMagnet.setPauliDistance(1.2);
+        SphereCollisionController sccx1 = new SphereCollisionController(floatingMagnet);
+        sccx1.setRadius(0.2);
+        sccx1.setTolerance(0.1);
         addElement(floatingMagnet);
       
         
@@ -191,7 +196,7 @@ public class Example_11 extends SimEM {
     public void reset() {
         floatingMagnet.setPosition(floatingMagnetPos);
         floatingMagnet.setVelocity(new Vector3d(0.,0.,0.));
-        floatingMagnet.setDirection(new Vector3d(0., 1., 0.));
+        floatingMagnet.setDirection(new Vector3d(-.1, 0., 0.));
         theEngine.setDamping(friction);
         MagMomentSlider.setValue(1.);
 		theEngine.requestRefresh();
