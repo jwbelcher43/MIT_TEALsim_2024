@@ -1,9 +1,9 @@
 The TEALsim Java 3D applets
 https://icampus.mit.edu/projects/teal/ 
 
-Documentation:  https://web.mit.edu/jbelcher/www/TEALsimDoc_2024.doc
+Documentation:  https://web.mit.edu/jbelcher/www/TEALsimDoc_2024.doc  (Last updated September 14, 2024)
 
-Documentation:  https://web.mit.edu/jbelcher/www/TEAL_Physics_Math_2024.doc
+Documentation:  https://web.mit.edu/jbelcher/www/TEAL_Physics_Math_2024.doc  (Last updated September 14, 2024)
 
 MIT TEALsim Software License
 
